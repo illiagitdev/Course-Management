@@ -1,7 +1,5 @@
 package com.courses.management.common;
 
-import com.courses.management.course.CourseService;
-
 public class MainController {
     private View view;
 

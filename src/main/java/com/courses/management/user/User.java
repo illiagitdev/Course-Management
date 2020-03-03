@@ -2,7 +2,7 @@ package com.courses.management.user;
 
 import com.courses.management.common.BaseEntity;
 import com.courses.management.course.Course;
-import com.courses.management.course.Homework;
+import com.courses.management.course.Solutions;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class User extends BaseEntity {
     private UserRole userRole;
     private UserStatus status;
     private Course course;
-    private List<Homework> homework;
+    private List<Solutions> solutions;
 
     public User() {
     }
@@ -66,11 +66,11 @@ public class User extends BaseEntity {
         this.course = course;
     }
 
-    public List<Homework> getHomework() {
-        return homework;
+    public List<Solutions> getSolutions() {
+        return solutions;
     }
 
-    public void setHomework(List<Homework> homework) {
-        this.homework = homework;
+    public void setSolutions(List<Solutions> solutions) {
+        this.solutions = solutions;
     }
 }
