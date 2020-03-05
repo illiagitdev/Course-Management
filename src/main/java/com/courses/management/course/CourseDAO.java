@@ -23,7 +23,8 @@ public class CourseDAO extends DataAccessObject<Course> {
             statement.setString(2, course.getCourseStatus().getCourseStatus());
             statement.execute();
         } catch (SQLException e) {
-            LOG.error(String.format("", ));
+            LOG.error(String.format("Error code: %s\nState: %s\nError massage: %s",
+                    e.getErrorCode(), e.getSQLState(), e.getMessage()));
             e.printStackTrace();
         }
     }
