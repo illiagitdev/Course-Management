@@ -17,7 +17,7 @@ public class CreateCourse implements Command {
 
     @Override
     public String command() {
-        return null;
+        return "create_course";
     }
 
     @Override
