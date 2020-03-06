@@ -1,6 +1,7 @@
-package com.courses.management.course;
+package com.courses.management.solution;
 
 import com.courses.management.common.BaseEntity;
+import com.courses.management.homework.Homework;
 
 public class Solutions extends BaseEntity {
     private String text;

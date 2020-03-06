@@ -2,7 +2,7 @@ package com.courses.management.user;
 
 import com.courses.management.common.BaseEntity;
 import com.courses.management.course.Course;
-import com.courses.management.course.Solutions;
+import com.courses.management.solution.Solutions;
 
 import java.util.List;
 
