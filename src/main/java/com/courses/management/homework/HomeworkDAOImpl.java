@@ -4,10 +4,10 @@ import com.courses.management.common.DataAccessObject;
 
 import java.util.List;
 
-public class HomworkDAOImpl implements DataAccessObject<Homework>, HomeworkDAO {
+public class HomeworkDAOImpl implements DataAccessObject<Homework>, HomeworkDAO {
     @Override
     public void create(Homework homework) {
-        
+
     }
 
     @Override
