@@ -9,9 +9,10 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
-public class CourseDAO extends DataAccessObject<Course> {
-    private static final Logger LOG = LogManager.getLogger(CourseDAO.class);
+public class CourseDAOImpl implements DataAccessObject<Course> {
+    private static final Logger LOG = LogManager.getLogger(CourseDAOImpl.class);
     private static final String INSERT = "INSERT INTO course(title, status) VALUES(?, ?);";
     private HikariDataSource dataSource = DatabaseConnector.getConnector();
 
@@ -27,5 +28,25 @@ public class CourseDAO extends DataAccessObject<Course> {
             LOG.error(String.format("Error code: %s\nState: %s\nError massage: %s",
                     e.getErrorCode(), e.getSQLState(), e.getMessage()));
         }
+    }
+
+    @Override
+    public void update(Course course) {
+
+    }
+
+    @Override
+    public void delete(int id) {
+
+    }
+
+    @Override
+    public Course get(int id) {
+        return null;
+    }
+
+    @Override
+    public List<Course> getAll() {
+        return null;
     }
 }
