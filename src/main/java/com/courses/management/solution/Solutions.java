@@ -2,12 +2,14 @@ package com.courses.management.solution;
 
 import com.courses.management.common.BaseEntity;
 import com.courses.management.homework.Homework;
+import com.courses.management.user.User;
 
 public class Solutions extends BaseEntity {
     private String text;
     private SolutionStatus status;
     private int mark;
     private Homework homework;
+    private User user;
 
     public String getText() {
         return text;
@@ -39,5 +41,13 @@ public class Solutions extends BaseEntity {
 
     public void setHomework(Homework homework) {
         this.homework = homework;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
