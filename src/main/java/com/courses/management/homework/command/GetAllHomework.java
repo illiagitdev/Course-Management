@@ -1,5 +1,8 @@
-package com.courses.management.common;
+package com.courses.management.homework.command;
 
+import com.courses.management.common.Command;
+import com.courses.management.common.DataAccessObject;
+import com.courses.management.common.View;
 import com.courses.management.homework.Homework;
 import com.courses.management.homework.HomeworkDAOImpl;
 
