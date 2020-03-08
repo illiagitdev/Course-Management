@@ -85,6 +85,7 @@ public class SolutionDAOImpl implements DataAccessObject<Solutions>, SolutionDao
             solution.setText(resultSet.getString(2));
             String status = resultSet.getString(3);
             solution.setStatus(SolutionStatus.valueOf(status));
+            solution.setMark(resultSet.getInt(4));
         } catch (SQLException e) {
             LOG.error("Error retrieving Solution.", e);
         }
