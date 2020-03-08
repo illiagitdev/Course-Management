@@ -22,6 +22,8 @@ public class HomeworkDAOImpl implements DataAccessObject<Homework>, HomeworkDAO 
     private static final String DELETE = "DELETE FROM home_work WHERE id = ?;";
     private static final String GET_BY_ID = "SELECT id, title, text, file_path FROM home_work WHERE id = ?;";
     private static final String GET_ALL = "SELECT id, title, text, file_path FROM home_work;";
+    private static final String GET_BY_COURSE_ID = "SELECT id, title, text, file_path FROM home_work " +
+            "WHERE course_id = ?;";
 
     @Override
     public void create(Homework homework) {
@@ -113,6 +115,24 @@ public class HomeworkDAOImpl implements DataAccessObject<Homework>, HomeworkDAO 
 
     @Override
     public List<Homework> getAll(int courseId) {
-        return null;
+        LOG.debug(String.format("getAll(courseId): homework.courseId=%s", courseId));
+        List<Homework> homework = null;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_BY_COURSE_ID)){
+            statement.setInt(1, courseId);
+            ResultSet resultSet = statement.executeQuery();
+            homework = new ArrayList<>();
+            while (resultSet.next()){
+                Homework hw = new Homework();
+                hw.setId(resultSet.getInt(1));
+                hw.setTitle(resultSet.getString(2));
+                hw.setText(resultSet.getString(3));
+                hw.setPath(resultSet.getString(4));
+                homework.add(hw);
+            }
+        } catch (SQLException e) {
+            LOG.error("Error retrieving courses.", e);
+        }
+        return homework;
     }
 }

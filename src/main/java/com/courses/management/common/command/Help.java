@@ -34,7 +34,7 @@ public class Help implements Command {
         view.write("    delete_homework |   delete homework by id-----------");
         view.write("    homework_by_id  |   get homework by id--------------");
         view.write("    get_all_homework    |   get all homework------------");
-        view.write("    Command         |   Description-------");
+        view.write("    homework_by_course_id   |   return all homework by course id");
         view.write("");
         view.write("    Command         |   Description-------");
         view.write("    Command         |   Description-------");

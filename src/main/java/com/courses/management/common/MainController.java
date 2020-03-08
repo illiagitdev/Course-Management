@@ -3,10 +3,7 @@ package com.courses.management.common;
 import com.courses.management.common.command.Exit;
 import com.courses.management.common.command.Help;
 import com.courses.management.course.command.*;
-import com.courses.management.homework.command.CreateHomework;
-import com.courses.management.homework.command.DeleteHomework;
-import com.courses.management.homework.command.GetHomeworkById;
-import com.courses.management.homework.command.UpdateHomework;
+import com.courses.management.homework.command.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,6 +32,7 @@ public class MainController {
                 new DeleteHomework(view),
                 new GetHomeworkById(view),
                 new GetAllHomework(view),
+                new GetAllHomeworkByCourse(view),
 
                 new Exit(view)
         );
