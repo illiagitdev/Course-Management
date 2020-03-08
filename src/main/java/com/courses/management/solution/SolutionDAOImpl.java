@@ -15,6 +15,7 @@ public class SolutionDAOImpl implements DataAccessObject<Solutions>, SolutionDao
     private static final Logger LOG = LogManager.getLogger(SolutionDAOImpl.class);
     private HikariDataSource dataSource = DatabaseConnector.getConnector();
     private static final String INSERT = "INSERT INTO solution(text, status, mark) VALUES(?, ?, ?);";
+    private static final String UPDATE = "UPDATE solution SET text = ?, mark = ? WHERE id = ?;";
 
     @Override
     public void create(Solutions solutions) {
@@ -23,7 +24,7 @@ public class SolutionDAOImpl implements DataAccessObject<Solutions>, SolutionDao
              PreparedStatement statement = connection.prepareStatement(INSERT)){
             statement.setString(1, solutions.getText());
             statement.setString(2, solutions.getStatus().getStatus());
-            statement.setInt(2, solutions.getMark());
+            statement.setInt(3, solutions.getMark());
             statement.execute();
         } catch (SQLException e) {
             LOG.error(String.format("Error creating solution: %s", solutions.getText()), e);
@@ -32,7 +33,16 @@ public class SolutionDAOImpl implements DataAccessObject<Solutions>, SolutionDao
 
     @Override
     public void update(Solutions solutions) {
-
+        LOG.debug(String.format("update: solutions.text=%s", solutions.getText()));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE)){
+            statement.setString(1, solutions.getText());
+            statement.setInt(2, solutions.getMark());
+            statement.setInt(3, solutions.getId());
+            statement.execute();
+        } catch (SQLException e) {
+            LOG.error(String.format("Error creating solution: %s", solutions.getText()), e);
+        }
     }
 
     @Override
