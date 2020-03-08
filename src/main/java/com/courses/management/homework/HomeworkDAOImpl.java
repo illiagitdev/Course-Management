@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class HomeworkDAOImpl implements DataAccessObject<Homework>, HomeworkDAO 
     private static final String INSERT = "INSERT INTO home_work(title, text, file_path) VALUES(?, ?, ?);";
     private static final String UPDATE = "UPDATE home_work SET title = ? WHERE id = ?;";
     private static final String DELETE = "DELETE FROM home_work WHERE id = ?;";
+    private static final String GET_BY_ID = "SELECT id, title, text, file_path FROM home_work WHERE id = ?;";
 
     @Override
     public void create(Homework homework) {
@@ -68,7 +70,22 @@ public class HomeworkDAOImpl implements DataAccessObject<Homework>, HomeworkDAO 
 
     @Override
     public Homework get(int id) {
-        return null;
+        Homework homework = null;
+        LOG.debug(String.format("get(id): homework.id=%s", id));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_BY_ID)){
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            homework = new Homework();
+            homework.setId(resultSet.getInt(1));
+            homework.setTitle(resultSet.getString(2));
+            homework.setText(resultSet.getString(3));
+            homework.setPath(resultSet.getString(4));
+        } catch (SQLException e) {
+            LOG.error("Error retrieving course.", e);
+        }
+        return homework;
     }
 
     @Override
