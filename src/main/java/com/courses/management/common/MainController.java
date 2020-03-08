@@ -4,6 +4,7 @@ import com.courses.management.common.command.Exit;
 import com.courses.management.common.command.Help;
 import com.courses.management.course.command.*;
 import com.courses.management.homework.command.CreateHomework;
+import com.courses.management.homework.command.UpdateHomework;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,6 +29,7 @@ public class MainController {
                 new GetCourseByTitle(view),
 
                 new CreateHomework(view),
+                new UpdateHomework(view),
 
                 new Exit(view)
         );

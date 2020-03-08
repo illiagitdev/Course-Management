@@ -16,6 +16,7 @@ public class HomeworkDAOImpl implements DataAccessObject<Homework>, HomeworkDAO 
     private static final Logger LOG = LogManager.getLogger(CourseDAOImpl.class);
     private HikariDataSource dataSource = DatabaseConnector.getConnector();
     private static final String INSERT = "INSERT INTO home_work(title, text, file_path) VALUES(?, ?, ?);";
+    private static final String UPDATE = "UPDATE home_work SET title = ? WHERE id = ?;";
 
     @Override
     public void create(Homework homework) {
@@ -33,7 +34,20 @@ public class HomeworkDAOImpl implements DataAccessObject<Homework>, HomeworkDAO 
 
     @Override
     public void update(Homework homework) {
-
+        LOG.info(String.format("update: homework.title=%s", homework.getTitle()));
+        try (Connection connection = dataSource.getConnection();
+             final PreparedStatement statement = connection.prepareStatement(UPDATE)) {
+            statement.setString(1, homework.getTitle());
+            statement.setString(2, homework.getText());
+            statement.setString(3, homework.getPath());
+            statement.setInt(4, homework.getId());
+            int row = statement.executeUpdate();
+            if (row == 0){
+                LOG.warn(String.format("Homework with id=%s not found", homework.getId()));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

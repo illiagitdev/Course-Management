@@ -30,7 +30,7 @@ public class Help implements Command {
         view.write("    course_by_title |   get course by title-------------");
         view.write("");
         view.write("    create_homework |   create homework-----------------");
-        view.write("    Command         |   Description-------");
+        view.write("    update_homework |   update existing homework--------");
         view.write("    Command         |   Description-------");
         view.write("    Command         |   Description-------");
         view.write("    Command         |   Description-------");
