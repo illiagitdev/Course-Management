@@ -39,7 +39,7 @@ public class Help implements Command {
         view.write("    create_solution |   create solution-----------------");
         view.write("    update_solution |   update existing solution--------");
         view.write("    delete_solution |   delete solution-----------------");
-        view.write("    Command         |   Description-------");
+        view.write("    solution_by_id  |   return solution with id---------");
         view.write("    Command         |   Description-------");
         view.write("    Command         |   Description-------");
         view.write("");

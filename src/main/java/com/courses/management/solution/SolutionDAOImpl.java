@@ -2,12 +2,14 @@ package com.courses.management.solution;
 
 import com.courses.management.common.DataAccessObject;
 import com.courses.management.common.DatabaseConnector;
+import com.courses.management.course.CourseStatus;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -17,6 +19,7 @@ public class SolutionDAOImpl implements DataAccessObject<Solutions>, SolutionDao
     private static final String INSERT = "INSERT INTO solution(text, status, mark) VALUES(?, ?, ?);";
     private static final String UPDATE = "UPDATE solution SET text = ?, mark = ? WHERE id = ?;";
     private static final String DELETE = "DELETE FROM solution WHERE id = ?;";
+    private static final String GET_BY_ID = "SELECT id, text, status, mark FROM solution WHERE id = ?;";
 
     @Override
     public void create(Solutions solutions) {
@@ -63,7 +66,22 @@ public class SolutionDAOImpl implements DataAccessObject<Solutions>, SolutionDao
 
     @Override
     public Solutions get(int id) {
-        return null;
+        Solutions solution = null;
+        LOG.debug(String.format("get(id): solution.id=%s", id));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_BY_ID)){
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            solution = new Solutions();
+            solution.setId(resultSet.getInt(1));
+            solution.setText(resultSet.getString(2));
+            String status = resultSet.getString(3);
+            solution.setStatus(SolutionStatus.valueOf(status));
+        } catch (SQLException e) {
+            LOG.error("Error retrieving Solution.", e);
+        }
+        return solution;
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.courses.management.course.command.*;
 import com.courses.management.homework.command.*;
 import com.courses.management.solution.command.CreateSolution;
 import com.courses.management.solution.command.DeleteSolution;
+import com.courses.management.solution.command.GetSolutionById;
 import com.courses.management.solution.command.UpdateSolution;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,6 +41,7 @@ public class MainController {
                 new CreateSolution(view),
                 new UpdateSolution(view),
                 new DeleteSolution(view),
+                new GetSolutionById(view),
 
                 new Exit(view)
         );
