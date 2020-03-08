@@ -26,7 +26,7 @@ public class GetCourseById implements Command {
         int id = validateNumber(view.read());
         Course course = courseDAO.get(id);
         view.write("Course\t\tcourse status");
-        view.write(String.format("%s\t\t%s", course.getTitle(), course.getCourseStatus()));
+        view.write(String.format("%d\t%s\t%s", course.getId(), course.getTitle(), course.getCourseStatus()));
         view.write(String.format("Course with id = %s retrieved", id));
     }
 

@@ -20,7 +20,7 @@ public class CourseDAOImpl implements DataAccessObject<Course>, CourseDAO {
     private static final String GET_ALL = "SELECT id, title, status FROM course;";
     private static final String UPDATE = "UPDATE course SET title = ? WHERE id = ?;";
     private static final String DELETE = "DELETE FROM course WHERE id = ?;";
-    private static final String GET_BY_ID = "SELECT title, status FROM course WHERE id = ?;";
+    private static final String GET_BY_ID = "SELECT id, title, status FROM course WHERE id = ?;";
     private static final String GET_BY_TITLE = "SELECT title, status FROM course WHERE title = ?;";
 
     @Override
@@ -61,7 +61,6 @@ public class CourseDAOImpl implements DataAccessObject<Course>, CourseDAO {
             int index = statement.executeUpdate();
             if (index == 0 ){
                 LOG.warn(String.format("no course with id=%s found", id));
-                throw new RuntimeException("");
             }
         } catch (SQLException e) {
             LOG.error(String.format("Error deleting course with id: %s", id), e);
@@ -78,8 +77,9 @@ public class CourseDAOImpl implements DataAccessObject<Course>, CourseDAO {
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
             course = new Course();
-            course.setTitle(resultSet.getString(1));
-            String status = resultSet.getString(2);
+            course.setId(resultSet.getInt(1));
+            course.setTitle(resultSet.getString(2));
+            String status = resultSet.getString(3);
             course.setCourseStatus(CourseStatus.valueOf(status));
         } catch (SQLException e) {
             LOG.error("Error retrieving course.", e);
