@@ -42,6 +42,7 @@ public class MainController {
                 new GetAllSolutions(view),
                 new GetSolutionsByUser(view),
                 new GetSolutionsByHomework(view),
+                new GetSolutionsByUserHomeworkId(view),
 
                 new Exit(view)
         );

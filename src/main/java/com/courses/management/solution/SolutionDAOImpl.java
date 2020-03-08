@@ -25,6 +25,8 @@ public class SolutionDAOImpl implements DataAccessObject<Solutions>, SolutionDao
             "WHERE user_id = ?;";
     private static final String ALL_BY_HOMEWORK_ID = "SELECT id, text, status, mark FROM solution " +
             "WHERE home_work_id = ?;";
+    private static final String GET_BY_USER_HOMEWORK_ID = "SELECT id, text, status, mark FROM solution " +
+            "WHERE user_id = ? & home_work_id = ?;";
 
     @Override
     public void create(Solutions solutions) {
@@ -159,6 +161,23 @@ public class SolutionDAOImpl implements DataAccessObject<Solutions>, SolutionDao
 
     @Override
     public Solutions get(int userId, int homeworkId) {
-        return null;
+        Solutions solution = null;
+        LOG.debug(String.format("get(userId, homeworkId): solution.user=%d, homework=%d", userId, homeworkId));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_BY_USER_HOMEWORK_ID)){
+            statement.setInt(1, userId);
+            statement.setInt(2, homeworkId);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            solution = new Solutions();
+            solution.setId(resultSet.getInt(1));
+            solution.setText(resultSet.getString(2));
+            String status = resultSet.getString(3);
+            solution.setStatus(SolutionStatus.valueOf(status));
+            solution.setMark(resultSet.getInt(4));
+        } catch (SQLException e) {
+            LOG.error("Error retrieving Solution.", e);
+        }
+        return solution;
     }
 }
