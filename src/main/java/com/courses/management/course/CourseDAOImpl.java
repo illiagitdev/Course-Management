@@ -41,7 +41,11 @@ public class CourseDAOImpl implements DataAccessObject<Course>, CourseDAO {
         LOG.debug(String.format("Update: course.title=%s", course.getTitle()));
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE)){
-            //for implementing
+            statement.setString(1, course.getTitle());
+            int rows = statement.executeUpdate();
+            if (rows == 0){
+                LOG.warn(String.format("Course with id=%s not found", course.getId()));
+            }
         } catch (SQLException e) {
             LOG.error(String.format("Error updating course with title: %s", course.getTitle()), e);
         }
