@@ -36,6 +36,9 @@ public class Help implements Command {
         view.write("    get_all_homework    |   get all homework------------");
         view.write("    homework_by_course_id   |   return all homework by course id");
         view.write("");
+        view.write("    create_solution |   create solution-----------------");
+        view.write("    Command         |   Description-------");
+        view.write("    Command         |   Description-------");
         view.write("    Command         |   Description-------");
         view.write("    Command         |   Description-------");
         view.write("    Command         |   Description-------");
