@@ -2,7 +2,7 @@ package com.courses.management.common;
 
 import com.courses.management.common.command.Exit;
 import com.courses.management.common.command.Help;
-import com.courses.management.course.CreateCourse;
+import com.courses.management.course.command.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,8 +17,15 @@ public class MainController {
     public MainController(View view) {
         this.view = view;
         this.commands = Arrays.asList(
-                new CreateCourse(view),
                 new Help(view),
+
+                new CreateCourse(view),
+                new UpdateCourse(view),
+                new GetAllCourses(view),
+                new DeleteCourse(view),
+                new GetCourseById(view),
+                new GetCourseByTitle(view),
+
                 new Exit(view)
         );
     }
