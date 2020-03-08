@@ -1,8 +1,11 @@
-package com.courses.management.course;
+package com.courses.management.course.command;
 
 import com.courses.management.common.Command;
 import com.courses.management.common.DataAccessObject;
 import com.courses.management.common.View;
+import com.courses.management.course.Course;
+import com.courses.management.course.CourseDAOImpl;
+import com.courses.management.course.CourseStatus;
 
 public class CreateCourse implements Command {
     private final View view;
