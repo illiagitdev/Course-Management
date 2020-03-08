@@ -41,7 +41,7 @@ public class Help implements Command {
         view.write("    delete_solution |   delete solution-----------------");
         view.write("    solution_by_id  |   return solution with id---------");
         view.write("    get_all_solutions   |   retrieve all solutions------");
-        view.write("    Command         |   Description-------");
+        view.write("    all_solutions_by_user   |   shows all solutions by user");
         view.write("    Command         |   Description-------");
         view.write("    Command         |   Description-------");
         view.write("");

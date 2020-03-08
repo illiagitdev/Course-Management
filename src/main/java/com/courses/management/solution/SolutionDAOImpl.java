@@ -21,6 +21,8 @@ public class SolutionDAOImpl implements DataAccessObject<Solutions>, SolutionDao
     private static final String DELETE = "DELETE FROM solution WHERE id = ?;";
     private static final String GET_BY_ID = "SELECT id, text, status, mark FROM solution WHERE id = ?;";
     private static final String GET_ALL = "SELECT id, text, status, mark FROM solution;";
+    private static final String ALL_BY_USER_ID = "SELECT id, text, status, mark FROM solution " +
+            "WHERE user_id = ?;";
 
     @Override
     public void create(Solutions solutions) {
@@ -109,7 +111,25 @@ public class SolutionDAOImpl implements DataAccessObject<Solutions>, SolutionDao
 
     @Override
     public List<Solutions> getAllByUser(int id) {
-        return null;
+        List<Solutions> solutions = null;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(ALL_BY_USER_ID)){
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            solutions = new ArrayList<>();
+            while (resultSet.next()){
+                Solutions sol = new Solutions();
+                sol.setId(resultSet.getInt(1));
+                sol.setText(resultSet.getString(2));
+                String status = resultSet.getString(3);
+                sol.setStatus(SolutionStatus.valueOf(status));
+                sol.setMark(resultSet.getInt(4));
+                solutions.add(sol);
+            }
+        } catch (SQLException e) {
+            LOG.error("Error retrieving solution by user id.", e);
+        }
+        return solutions;
     }
 
     @Override

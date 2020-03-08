@@ -40,6 +40,7 @@ public class MainController {
                 new DeleteSolution(view),
                 new GetSolutionById(view),
                 new GetAllSolutions(view),
+                new GetSolutionsByUser(view),
 
                 new Exit(view)
         );
