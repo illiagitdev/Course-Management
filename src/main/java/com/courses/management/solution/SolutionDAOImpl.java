@@ -16,6 +16,7 @@ public class SolutionDAOImpl implements DataAccessObject<Solutions>, SolutionDao
     private HikariDataSource dataSource = DatabaseConnector.getConnector();
     private static final String INSERT = "INSERT INTO solution(text, status, mark) VALUES(?, ?, ?);";
     private static final String UPDATE = "UPDATE solution SET text = ?, mark = ? WHERE id = ?;";
+    private static final String DELETE = "DELETE FROM solution WHERE id = ?;";
 
     @Override
     public void create(Solutions solutions) {
@@ -47,7 +48,17 @@ public class SolutionDAOImpl implements DataAccessObject<Solutions>, SolutionDao
 
     @Override
     public void delete(int id) {
-
+        LOG.debug(String.format("delete: solution.id=%s", id));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE)){
+            statement.setInt(1, id);
+            int index = statement.executeUpdate();
+            if (index == 0 ){
+                LOG.warn(String.format("no solution with id=%s found", id));
+            }
+        } catch (SQLException e) {
+            LOG.error(String.format("Error deleting solution with id: %s", id), e);
+        }
     }
 
     @Override
