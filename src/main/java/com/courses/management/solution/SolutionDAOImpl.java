@@ -2,7 +2,6 @@ package com.courses.management.solution;
 
 import com.courses.management.common.DataAccessObject;
 import com.courses.management.common.DatabaseConnector;
-import com.courses.management.course.CourseStatus;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SolutionDAOImpl implements DataAccessObject<Solutions>, SolutionDao {
@@ -20,6 +20,7 @@ public class SolutionDAOImpl implements DataAccessObject<Solutions>, SolutionDao
     private static final String UPDATE = "UPDATE solution SET text = ?, mark = ? WHERE id = ?;";
     private static final String DELETE = "DELETE FROM solution WHERE id = ?;";
     private static final String GET_BY_ID = "SELECT id, text, status, mark FROM solution WHERE id = ?;";
+    private static final String GET_ALL = "SELECT id, text, status, mark FROM solution;";
 
     @Override
     public void create(Solutions solutions) {
@@ -86,7 +87,24 @@ public class SolutionDAOImpl implements DataAccessObject<Solutions>, SolutionDao
 
     @Override
     public List<Solutions> getAll() {
-        return null;
+        List<Solutions> solutions = null;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_ALL)){
+            ResultSet resultSet = statement.executeQuery();
+            solutions = new ArrayList<>();
+            while (resultSet.next()){
+                Solutions sol = new Solutions();
+                sol.setId(resultSet.getInt(1));
+                sol.setText(resultSet.getString(2));
+                String status = resultSet.getString(3);
+                sol.setStatus(SolutionStatus.valueOf(status));
+                sol.setMark(resultSet.getInt(4));
+                solutions.add(sol);
+            }
+        } catch (SQLException e) {
+            LOG.error("Error retrieving solution.", e);
+        }
+        return solutions;
     }
 
     @Override
