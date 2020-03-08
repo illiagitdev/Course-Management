@@ -42,6 +42,7 @@ public class CourseDAOImpl implements DataAccessObject<Course>, CourseDAO {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE)){
             statement.setString(1, course.getTitle());
+            statement.setInt(2, course.getId());
             int rows = statement.executeUpdate();
             if (rows == 0){
                 LOG.warn(String.format("Course with id=%s not found", course.getId()));

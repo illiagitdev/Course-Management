@@ -22,9 +22,12 @@ public class UpdateCourse implements Command {
 
     @Override
     public void process() {
+        view.write("Enter course ID for update");
+        int id = validateNumber(view.read());
         view.write("Enter update to course title");
         String title = validate(view.read());
         Course course = new Course();
+        course.setId(id);
         course.setTitle(title);
         courseDAO.update(course);
         view.write(String.format("Course updated with title: %s", course.getTitle()));
@@ -35,5 +38,15 @@ public class UpdateCourse implements Command {
             value = view.read();
         }
         return value.toUpperCase();
+    }
+
+    private int validateNumber(String value) {
+        int res = 0;
+        try {
+            res = Integer.parseInt(value);
+        } catch (RuntimeException e) {
+            view.write("Input not a number!");
+        }
+        return res;
     }
 }
