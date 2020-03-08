@@ -33,7 +33,7 @@ public class Help implements Command {
         view.write("    update_homework |   update existing homework--------");
         view.write("    delete_homework |   delete homework by id-----------");
         view.write("    homework_by_id  |   get homework by id--------------");
-        view.write("    Command         |   Description-------");
+        view.write("    get_all_homework    |   get all homework------------");
         view.write("    Command         |   Description-------");
         view.write("");
         view.write("    Command         |   Description-------");

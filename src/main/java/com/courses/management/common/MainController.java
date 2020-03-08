@@ -34,6 +34,7 @@ public class MainController {
                 new UpdateHomework(view),
                 new DeleteHomework(view),
                 new GetHomeworkById(view),
+                new GetAllHomework(view),
 
                 new Exit(view)
         );
