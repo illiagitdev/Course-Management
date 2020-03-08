@@ -31,11 +31,18 @@ public class Help implements Command {
         view.write("");
         view.write("    create_homework |   create homework-----------------");
         view.write("    update_homework |   update existing homework--------");
+        view.write("    delete_homework |   delete homework by id-----------");
         view.write("    Command         |   Description-------");
         view.write("    Command         |   Description-------");
         view.write("    Command         |   Description-------");
         view.write("");
+        view.write("    Command         |   Description-------");
+        view.write("    Command         |   Description-------");
+        view.write("    Command         |   Description-------");
         view.write("");
+        view.write("    Command         |   Description-------");
+        view.write("    Command         |   Description-------");
+        view.write("    Command         |   Description-------");
         view.write("");
         view.write("    exit            |   exit application----------------");
         view.write("--------------------------------------------------------");

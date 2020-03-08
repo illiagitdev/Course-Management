@@ -17,6 +17,7 @@ public class HomeworkDAOImpl implements DataAccessObject<Homework>, HomeworkDAO 
     private HikariDataSource dataSource = DatabaseConnector.getConnector();
     private static final String INSERT = "INSERT INTO home_work(title, text, file_path) VALUES(?, ?, ?);";
     private static final String UPDATE = "UPDATE home_work SET title = ? WHERE id = ?;";
+    private static final String DELETE = "DELETE FROM home_work WHERE id = ?;";
 
     @Override
     public void create(Homework homework) {
@@ -52,7 +53,17 @@ public class HomeworkDAOImpl implements DataAccessObject<Homework>, HomeworkDAO 
 
     @Override
     public void delete(int id) {
-
+        LOG.debug(String.format("delete: homework.id=%s", id));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE)){
+            statement.setInt(1, id);
+            int index = statement.executeUpdate();
+            if (index == 0 ){
+                LOG.warn(String.format("no homework with id=%s found", id));
+            }
+        } catch (SQLException e) {
+            LOG.error(String.format("Error deleting homework with id: %s", id), e);
+        }
     }
 
     @Override
