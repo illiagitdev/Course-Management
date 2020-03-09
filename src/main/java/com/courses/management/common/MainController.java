@@ -5,10 +5,7 @@ import com.courses.management.common.command.Help;
 import com.courses.management.course.command.*;
 import com.courses.management.homework.command.*;
 import com.courses.management.solution.command.*;
-import com.courses.management.user.command.CreateUser;
-import com.courses.management.user.command.DeleteUser;
-import com.courses.management.user.command.GetUserById;
-import com.courses.management.user.command.UpdateUser;
+import com.courses.management.user.command.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -52,6 +49,7 @@ public class MainController {
                 new UpdateUser(view),
                 new DeleteUser(view),
                 new GetUserById(view),
+                new GetAllUser(view),
 
                 new Exit(view)
         );

@@ -49,7 +49,7 @@ public class Help implements Command {
         view.write("    update_user     |   update existing user-------------");
         view.write("    delete_user     |   delete user by id----------------");
         view.write("    user_by_id      |   show user by id------------------");
-        view.write("    Command         |   Description-------");
+        view.write("    all_users       |   show all users-------------------");
         view.write("    Command         |   Description-------");
         view.write("");
         view.write("    exit            |   exit application----------------");
