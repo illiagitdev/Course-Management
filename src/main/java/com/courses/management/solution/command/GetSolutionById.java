@@ -24,7 +24,6 @@ public class GetSolutionById implements Command {
     public void process() {
         view.write("Enter solution ID");
         int id = validateNumber(view.read());
-        view.write("Enter update to solution text");
         Solutions sol = new Solutions();
         solutionsDAO.get(id);
         view.write(String.format("id=%d, text='%s', status=%s, mark=%d",
