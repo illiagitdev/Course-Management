@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class UserDAOImpl implements DataAccessObject<User>, UserDAO {
     private static final String UPDATE = "UPDATE users SET first_name = ?, last_name = ?, email = ? " +
             "WHERE id = ?;";
     private static final String DELETE = "DELETE FROM users WHERE id = ?;";
+    private static final String GET_BY_ID = "SELECT id, first_name, last_name, email, user_role, status " +
+            "FROM users WHERE id = ?;";
 
     @Override
     public void create(User user) {
@@ -73,7 +76,26 @@ public class UserDAOImpl implements DataAccessObject<User>, UserDAO {
 
     @Override
     public User get(int id) {
-        return null;
+        User user = null;
+        LOG.debug(String.format("get(id): user.id=%s", id));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_BY_ID)){
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            user = new User();
+            user.setId(resultSet.getInt(1));
+            user.setFirstName(resultSet.getString(2));
+            user.setLastName(resultSet.getString(3));
+            user.setEmail(resultSet.getString(4));
+            String role = resultSet.getString(5);
+            user.setUserRole(UserRole.valueOf(role));
+            String status = resultSet.getString(6);
+            user.setStatus(UserStatus.valueOf(status));
+        } catch (SQLException e) {
+            LOG.error("Error retrieving user.", e);
+        }
+        return user;
     }
 
     @Override
