@@ -24,8 +24,7 @@ public class GetUserById implements Command {
     public void process() {
         view.write("Enter user ID");
         int id = validateNumber(view.read());
-        User user = new User();
-        userDAO.get(id);
+        User user = userDAO.get(id);
         view.write(String.format("id=%d, (fn):'%s', (ln):)%s, email:%s, (role):%s, (status):%s",
                 user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
                 user.getUserRole(), user.getStatus()));
