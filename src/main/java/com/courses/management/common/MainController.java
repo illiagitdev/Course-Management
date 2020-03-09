@@ -50,6 +50,7 @@ public class MainController {
                 new DeleteUser(view),
                 new GetUserById(view),
                 new GetAllUser(view),
+                new GetCourseUsers(view),
 
                 new Exit(view)
         );

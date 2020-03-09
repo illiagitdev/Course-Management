@@ -25,6 +25,8 @@ public class UserDAOImpl implements DataAccessObject<User>, UserDAO {
     private static final String GET_BY_ID = "SELECT id, first_name, last_name, email, user_role, status " +
             "FROM users WHERE id = ?;";
     private static final String GET_ALL = "SELECT id, first_name, last_name, email, user_role, status FROM users;";
+    private static final String GET_ALL_BY_COURSE_ID = "SELECT id, first_name, last_name, email, user_role, status " +
+            "FROM users WHERE course_id = ?;";
 
     @Override
     public void create(User user) {
@@ -127,6 +129,27 @@ public class UserDAOImpl implements DataAccessObject<User>, UserDAO {
 
     @Override
     public List<User> getByCourse(int courseId) {
-        return null;
+        List<User> users = null;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_ALL_BY_COURSE_ID)){
+            statement.setInt(1 ,courseId);
+            ResultSet resultSet = statement.executeQuery();
+            users = new ArrayList<>();
+            while (resultSet.next()){
+                User user = new User();
+                user.setId(resultSet.getInt(1));
+                user.setFirstName(resultSet.getString(2));
+                user.setLastName(resultSet.getString(3));
+                user.setEmail(resultSet.getString(4));
+                String role = resultSet.getString(5);
+                user.setUserRole(UserRole.valueOf(role));
+                String status = resultSet.getString(6);
+                user.setStatus(UserStatus.valueOf(status));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            LOG.error("Error retrieving users by course id.", e);
+        }
+        return users;
     }
 }

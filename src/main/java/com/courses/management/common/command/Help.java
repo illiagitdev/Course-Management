@@ -50,7 +50,7 @@ public class Help implements Command {
         view.write("    delete_user     |   delete user by id----------------");
         view.write("    user_by_id      |   show user by id------------------");
         view.write("    all_users       |   show all users-------------------");
-        view.write("    Command         |   Description-------");
+        view.write("    users_by_course_id  |   show all users by course id--");
         view.write("");
         view.write("    exit            |   exit application----------------");
         view.write("--------------------------------------------------------");
