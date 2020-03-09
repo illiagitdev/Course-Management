@@ -17,6 +17,8 @@ public class UserDAOImpl implements DataAccessObject<User>, UserDAO {
     private HikariDataSource dataSource = DatabaseConnector.getConnector();
     private static final String INSERT = "INSERT INTO users(first_name, last_name, email, user_role, status) " +
             "VALUES(?, ?, ?, ?, ?);";
+    private static final String UPDATE = "UPDATE users SET first_name = ?, last_name = ?, email = ? " +
+            "WHERE id = ?;";
 
     @Override
     public void create(User user) {
@@ -36,6 +38,20 @@ public class UserDAOImpl implements DataAccessObject<User>, UserDAO {
 
     @Override
     public void update(User user) {
+        LOG.debug(String.format("update: user.id=%d", user.getId()));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE)){
+            statement.setString(1, user.getFirstName());
+            statement.setString(2, user.getLastName());
+            statement.setString(3, user.getEmail());
+            statement.setInt(4, user.getId());
+            int rowAffected = statement.executeUpdate();
+            if (rowAffected == 0 || rowAffected > 1) {
+                LOG.warn(String.format("update: affected rows=%d", rowAffected));
+            }
+        } catch (SQLException e) {
+            LOG.error(String.format("Error creating user: %s", user.getFirstName()), e);
+        }
 
     }
 
