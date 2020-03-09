@@ -19,6 +19,7 @@ public class UserDAOImpl implements DataAccessObject<User>, UserDAO {
             "VALUES(?, ?, ?, ?, ?);";
     private static final String UPDATE = "UPDATE users SET first_name = ?, last_name = ?, email = ? " +
             "WHERE id = ?;";
+    private static final String DELETE = "DELETE FROM users WHERE id = ?;";
 
     @Override
     public void create(User user) {
@@ -57,7 +58,17 @@ public class UserDAOImpl implements DataAccessObject<User>, UserDAO {
 
     @Override
     public void delete(int id) {
-
+        LOG.debug(String.format("delete: users.id=%s", id));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE)){
+            statement.setInt(1, id);
+            int index = statement.executeUpdate();
+            if (index == 0 ){
+                LOG.warn(String.format("no user with id=%s found", id));
+            }
+        } catch (SQLException e) {
+            LOG.error(String.format("Error deleting user with id: %s", id), e);
+        }
     }
 
     @Override

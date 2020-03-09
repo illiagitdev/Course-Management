@@ -6,6 +6,7 @@ import com.courses.management.course.command.*;
 import com.courses.management.homework.command.*;
 import com.courses.management.solution.command.*;
 import com.courses.management.user.command.CreateUser;
+import com.courses.management.user.command.DeleteUser;
 import com.courses.management.user.command.UpdateUser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,6 +49,7 @@ public class MainController {
 
                 new CreateUser(view),
                 new UpdateUser(view),
+                new DeleteUser(view),
 
                 new Exit(view)
         );
