@@ -62,3 +62,5 @@ create table solution
 alter table solution owner to postgres;
 
 ALTER TABLE course ADD UNIQUE (title);
+
+ALTER TABLE users ADD UNIQUE (email);
