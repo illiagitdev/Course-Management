@@ -19,7 +19,7 @@ public class GetAllCourses implements Command {
 
     @Override
     public String command() {
-        return "get_all_courses";
+        return "find_all_courses";
     }
 
     @Override
