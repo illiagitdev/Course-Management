@@ -21,7 +21,7 @@ public class CourseDAOImpl implements CourseDAO {
     private static final String UPDATE = "UPDATE course SET title = ? WHERE id = ?;";
     private static final String DELETE = "DELETE FROM course WHERE id = ?;";
     private static final String GET_BY_ID = "SELECT id, title, status FROM course WHERE id = ?;";
-    private static final String GET_BY_TITLE = "SELECT title, status FROM course WHERE title = ?;";
+    private static final String GET_BY_TITLE = "SELECT id, title, status FROM course WHERE title = ?;";
 
     @Override
     public void create(Course course) {
@@ -76,11 +76,7 @@ public class CourseDAOImpl implements CourseDAO {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-            course = new Course();
-            course.setId(resultSet.getInt(1));
-            course.setTitle(resultSet.getString(2));
-            String status = resultSet.getString(3);
-            course.setCourseStatus(CourseStatus.valueOf(status));
+            course = buildCourse(resultSet);
         } catch (SQLException e) {
             LOG.error("Error retrieving course.", e);
         }
@@ -95,11 +91,7 @@ public class CourseDAOImpl implements CourseDAO {
             ResultSet resultSet = statement.executeQuery();
             courses = new ArrayList<>();
             while (resultSet.next()){
-                Course course = new Course();
-                course.setId(resultSet.getInt(1));
-                course.setTitle(resultSet.getString(2));
-                String status = resultSet.getString(3);
-                course.setCourseStatus(CourseStatus.valueOf(status));
+                Course course = buildCourse(resultSet);
                 courses.add(course);
             }
         } catch (SQLException e) {
@@ -117,13 +109,7 @@ public class CourseDAOImpl implements CourseDAO {
             statement.setString(1, title);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-            String courseTitle = resultSet.getString(1);
-            String status = resultSet.getString(2);
-            Optional<CourseStatus> tmp = CourseStatus.getCourseStatusValue(status.toLowerCase());
-            CourseStatus courseSender = tmp.isEmpty() ? null : tmp.get();
-            course = new Course();
-            course.setTitle(courseTitle);
-            course.setCourseStatus(courseSender);
+            course = buildCourse(resultSet);
         } catch (SQLException e) {
             LOG.error("Error retrieving course.", e);
         }
@@ -133,5 +119,15 @@ public class CourseDAOImpl implements CourseDAO {
     @Override
     public void updateTitle(String title) {
 
+    }
+
+    private Course buildCourse(ResultSet resultSet) throws SQLException {
+        Course course = new Course();
+        course.setId(resultSet.getInt("id"));
+        course.setTitle(resultSet.getString("title"));
+        Optional<CourseStatus> status = CourseStatus.getCourseStatusValue(resultSet.getString("sex").toLowerCase());
+        CourseStatus sex = status.isEmpty() ? null : status.get();
+        course.setCourseStatus(sex);
+        return course;
     }
 }

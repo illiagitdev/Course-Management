@@ -17,17 +17,16 @@ public class GetCourseByTitle implements Command {
 
     @Override
     public String command() {
-        return "course_by_title";
+        return "find_course_title";
     }
 
     @Override
     public void process() {
-        view.write("Enter course title");
+        view.write("To find course enter it's title");
         String title = validate(view.read());
         Course course = courseDAO.get(title);
         view.write("Course\t\tcourse status");
         view.write(String.format("%s\t\t%s", course.getTitle(), course.getCourseStatus()));
-        view.write(String.format("Course retrieved by title: %s", title));
     }
 
     private String validate(String value) {

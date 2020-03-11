@@ -17,17 +17,16 @@ public class GetCourseById implements Command {
 
     @Override
     public String command() {
-        return "course_by_id";
+        return "find_course_id";
     }
 
     @Override
     public void process() {
-        view.write("Enter a course id");
+        view.write("To find course enter course id");
         int id = validateNumber(view.read());
         Course course = courseDAO.get(id);
         view.write("Course\t\tcourse status");
         view.write(String.format("%d\t%s\t%s", course.getId(), course.getTitle(), course.getCourseStatus()));
-        view.write(String.format("Course with id = %s retrieved", id));
     }
 
     private int validateNumber(String value) {
