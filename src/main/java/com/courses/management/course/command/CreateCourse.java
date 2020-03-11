@@ -25,11 +25,15 @@ public class CreateCourse implements Command {
     public void process() {
             view.write("Enter a course title");
             String title = validate(view.read());
-            Course course = new Course();
-            course.setTitle(title);
-            course.setCourseStatus(CourseStatus.NOT_STARTED);
-            courseDAO.create(course);
-            view.write(String.format("Course created with title: %s", course.getTitle()));
+            if (courseDAO.get(title) != null){
+                view.write(String.format("Course with title =%s already exist!", title));
+            }else {
+                Course course = new Course();
+                course.setTitle(title);
+                course.setCourseStatus(CourseStatus.NOT_STARTED);
+                courseDAO.create(course);
+                view.write(String.format("Course created with title: %s", course.getTitle()));
+            }
     }
 
     private String validate(String value) {

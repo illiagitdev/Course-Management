@@ -1,6 +1,5 @@
 package com.courses.management.course;
 
-import com.courses.management.common.DataAccessObject;
 import com.courses.management.common.DatabaseConnector;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.logging.log4j.LogManager;
@@ -12,10 +11,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class CourseDAOImpl implements DataAccessObject<Course>, CourseDAO {
+public class CourseDAOImpl implements CourseDAO {
     private static final Logger LOG = LogManager.getLogger(CourseDAOImpl.class);
     private HikariDataSource dataSource = DatabaseConnector.getConnector();
+    private static final String INSERT = "INSERT INTO course(title, status) VALUES(?, ?);";
     private static final String GET_ALL = "SELECT id, title, status FROM course;";
     private static final String UPDATE = "UPDATE course SET title = ? WHERE id = ?;";
     private static final String DELETE = "DELETE FROM course WHERE id = ?;";
@@ -25,24 +26,11 @@ public class CourseDAOImpl implements DataAccessObject<Course>, CourseDAO {
     @Override
     public void create(Course course) {
         LOG.debug(String.format("create: course.title=%s", course.getTitle()));
-        String checkTitle = "SELECT EXISTS (SELECT 1 FROM course WHERE title = ? LIMIT 1);";
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(checkTitle)){
-            boolean flag;
+             PreparedStatement statement = connection.prepareStatement(INSERT)){
             statement.setString(1, course.getTitle());
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            flag = resultSet.getBoolean(1);
-            if (flag){
-                LOG.info(String.format("Course with title=%s exist.", course.getTitle()));
-                return;
-            }
-            String INSERT = "INSERT INTO course(title, status) VALUES(?, ?);";
-            try(PreparedStatement statement2 = connection.prepareStatement(INSERT)){
-                statement2.setString(1, course.getTitle());
-                statement2.setString(2, course.getCourseStatus().getCourseStatus());
-                statement2.execute();
-            }
+            statement.setString(2, course.getCourseStatus().getCourseStatus());
+            statement.execute();
         } catch (SQLException e) {
             LOG.error(String.format("Error creating course with title: %s", course.getTitle()), e);
         }
@@ -129,13 +117,21 @@ public class CourseDAOImpl implements DataAccessObject<Course>, CourseDAO {
             statement.setString(1, title);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-            course = new Course();
-            course.setTitle(resultSet.getString(1));
+            String courseTitle = resultSet.getString(1);
             String status = resultSet.getString(2);
-            course.setCourseStatus(CourseStatus.valueOf(status));
+            Optional<CourseStatus> tmp = CourseStatus.getCourseStatusValue(status.toLowerCase());
+            CourseStatus courseSender = tmp.isEmpty() ? null : tmp.get();
+            course = new Course();
+            course.setTitle(courseTitle);
+            course.setCourseStatus(courseSender);
         } catch (SQLException e) {
             LOG.error("Error retrieving course.", e);
         }
         return course;
+    }
+
+    @Override
+    public void updateTitle(String title) {
+
     }
 }
