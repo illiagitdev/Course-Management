@@ -1,16 +1,16 @@
 package com.courses.management.solution.command;
 
 import com.courses.management.common.Command;
-import com.courses.management.common.DataAccessObject;
 import com.courses.management.common.View;
 import com.courses.management.solution.SolutionDAOImpl;
+import com.courses.management.solution.SolutionDao;
 import com.courses.management.solution.Solutions;
 
 import java.util.List;
 
 public class GetAllSolutions implements Command {
     private final View view;
-    private DataAccessObject<Solutions> solutionsDAO;
+    private SolutionDao solutionsDAO;
 
     public GetAllSolutions(View view) {
         this.view = view;

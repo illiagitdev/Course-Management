@@ -1,14 +1,13 @@
 package com.courses.management.solution.command;
 
 import com.courses.management.common.Command;
-import com.courses.management.common.DataAccessObject;
 import com.courses.management.common.View;
 import com.courses.management.solution.SolutionDAOImpl;
-import com.courses.management.solution.Solutions;
+import com.courses.management.solution.SolutionDao;
 
 public class DeleteSolution implements Command {
     private final View view;
-    private DataAccessObject<Solutions> solutionsDAO;
+    private SolutionDao solutionsDAO;
 
     public DeleteSolution(View view) {
         this.view = view;

@@ -1,15 +1,15 @@
 package com.courses.management.solution.command;
 
 import com.courses.management.common.Command;
-import com.courses.management.common.DataAccessObject;
 import com.courses.management.common.View;
 import com.courses.management.solution.SolutionDAOImpl;
+import com.courses.management.solution.SolutionDao;
 import com.courses.management.solution.SolutionStatus;
 import com.courses.management.solution.Solutions;
 
 public class CreateSolution implements Command {
     private final View view;
-    private DataAccessObject<Solutions> solutionsDAO;
+    private SolutionDao solutionsDAO;
 
     public CreateSolution(View view) {
         this.view = view;
