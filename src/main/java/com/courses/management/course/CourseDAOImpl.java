@@ -16,7 +16,6 @@ import java.util.List;
 public class CourseDAOImpl implements DataAccessObject<Course>, CourseDAO {
     private static final Logger LOG = LogManager.getLogger(CourseDAOImpl.class);
     private HikariDataSource dataSource = DatabaseConnector.getConnector();
-    private static final String INSERT = "INSERT INTO course(title, status) VALUES(?, ?);";
     private static final String GET_ALL = "SELECT id, title, status FROM course;";
     private static final String UPDATE = "UPDATE course SET title = ? WHERE id = ?;";
     private static final String DELETE = "DELETE FROM course WHERE id = ?;";
@@ -26,11 +25,24 @@ public class CourseDAOImpl implements DataAccessObject<Course>, CourseDAO {
     @Override
     public void create(Course course) {
         LOG.debug(String.format("create: course.title=%s", course.getTitle()));
+        String checkTitle = "SELECT EXISTS (SELECT 1 FROM course WHERE title = ? LIMIT 1);";
         try (Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement(INSERT)){
+             PreparedStatement statement = connection.prepareStatement(checkTitle)){
+            boolean flag;
             statement.setString(1, course.getTitle());
-            statement.setString(2, course.getCourseStatus().getCourseStatus());
-            statement.execute();
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            flag = resultSet.getBoolean(1);
+            if (flag){
+                LOG.info(String.format("Course with title=%s exist.", course.getTitle()));
+                return;
+            }
+            String INSERT = "INSERT INTO course(title, status) VALUES(?, ?);";
+            try(PreparedStatement statement2 = connection.prepareStatement(INSERT)){
+                statement2.setString(1, course.getTitle());
+                statement2.setString(2, course.getCourseStatus().getCourseStatus());
+                statement2.execute();
+            }
         } catch (SQLException e) {
             LOG.error(String.format("Error creating course with title: %s", course.getTitle()), e);
         }
