@@ -1,14 +1,14 @@
 package com.courses.management.user.command;
 
 import com.courses.management.common.Command;
-import com.courses.management.common.DataAccessObject;
 import com.courses.management.common.View;
 import com.courses.management.user.User;
+import com.courses.management.user.UserDAO;
 import com.courses.management.user.UserDAOImpl;
 
 public class GetUserById implements Command {
     private final View view;
-    private DataAccessObject<User> userDAO;
+    private UserDAO userDAO;
 
     public GetUserById(View view) {
         this.view = view;

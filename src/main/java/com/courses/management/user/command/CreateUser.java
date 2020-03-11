@@ -1,16 +1,12 @@
 package com.courses.management.user.command;
 
 import com.courses.management.common.Command;
-import com.courses.management.common.DataAccessObject;
 import com.courses.management.common.View;
-import com.courses.management.user.User;
-import com.courses.management.user.UserDAOImpl;
-import com.courses.management.user.UserRole;
-import com.courses.management.user.UserStatus;
+import com.courses.management.user.*;
 
 public class CreateUser implements Command {
     private final View view;
-    private DataAccessObject<User> userDAO;
+    private UserDAO userDAO;
 
     public CreateUser(View view) {
         this.view = view;
