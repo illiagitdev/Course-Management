@@ -21,6 +21,16 @@ public class DeleteCourseTitle implements Command {
 
     @Override
     public void process() {
+        view.write("Enter a course title");
+        String title = validate(view.read());
+        courseDAO.delete(title);
+        view.write(String.format("Course with title = %s deleted", title));
+    }
 
+    private String validate(String value) {
+        while (value.trim().isEmpty()){
+            value = view.read();
+        }
+        return value.toUpperCase();
     }
 }

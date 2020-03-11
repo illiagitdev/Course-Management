@@ -24,7 +24,7 @@ public class DeleteCourse implements Command {
         view.write("Enter a course id");
         int id = validateNumber(view.read());
         courseDAO.delete(id);
-        view.write(String.format("Course with id = %s deleted", id));
+        view.write(String.format("Course with id = %d deleted", id));
     }
 
     private int validateNumber(String value) {
