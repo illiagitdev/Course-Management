@@ -22,6 +22,7 @@ public class CourseDAOImpl implements CourseDAO {
     private static final String UPDATE_TITLE = "UPDATE course SET title = ? WHERE id = ?;";
     private static final String UPDATE_STATUS = "UPDATE course SET status = ? WHERE id = ?;";
     private static final String DELETE = "DELETE FROM course WHERE id = ?;";
+    private static final String DELETE_TITLE = "DELETE FROM course WHERE title = ?;";
     private static final String GET_BY_ID = "SELECT id, title, status FROM course WHERE id = ?;";
     private static final String GET_BY_TITLE = "SELECT id, title, status FROM course WHERE title = ?;";
 
@@ -50,6 +51,21 @@ public class CourseDAOImpl implements CourseDAO {
             }
         } catch (SQLException e) {
             LOG.error(String.format("Error deleting course with id: %s", id), e);
+        }
+    }
+
+    @Override
+    public void delete(String title) {
+        LOG.debug(String.format("delete: course.title=%s", title));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_TITLE)){
+            statement.setString(1, title);
+            int index = statement.executeUpdate();
+            if (index == 0 ){
+                LOG.warn(String.format("no course with title=%s found", title));
+            }
+        } catch (SQLException e) {
+            LOG.error(String.format("Error deleting course with title: %s", title), e);
         }
     }
 

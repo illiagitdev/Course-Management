@@ -28,6 +28,7 @@ public class MainController {
                 new UpdateCourseStatus(view),
                 new GetAllCourses(view),
                 new DeleteCourse(view),
+                new DeleteCourseTitle(view),
                 new GetCourseById(view),
                 new GetCourseByTitle(view),
 

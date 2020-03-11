@@ -6,4 +6,5 @@ public interface CourseDAO extends DataAccessObject<Course> {
     Course get(String title);
     void updateTitle(Course course);
     void updateStatus(Course course);
+    void delete(String title);
 }
