@@ -1,14 +1,14 @@
 package com.courses.management.homework.command;
 
 import com.courses.management.common.Command;
-import com.courses.management.common.DataAccessObject;
 import com.courses.management.common.View;
 import com.courses.management.homework.Homework;
+import com.courses.management.homework.HomeworkDAO;
 import com.courses.management.homework.HomeworkDAOImpl;
 
 public class GetHomeworkById implements Command {
     private final View view;
-    private DataAccessObject<Homework> homeworkDAO;
+    private HomeworkDAO homeworkDAO;
 
     public GetHomeworkById(View view) {
         this.view = view;
