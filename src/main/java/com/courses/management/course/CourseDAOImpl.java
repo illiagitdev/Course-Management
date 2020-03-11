@@ -18,7 +18,7 @@ public class CourseDAOImpl implements CourseDAO {
     private HikariDataSource dataSource = DatabaseConnector.getConnector();
     private static final String INSERT = "INSERT INTO course(title, status) VALUES(?, ?);";
     private static final String GET_ALL = "SELECT id, title, status FROM course;";
-    private static final String UPDATE = "UPDATE course SET title = ? WHERE id = ?;";
+    private static final String UPDATE = "UPDATE course SET title = ?, status = ? WHERE id = ?;";
     private static final String DELETE = "DELETE FROM course WHERE id = ?;";
     private static final String GET_BY_ID = "SELECT id, title, status FROM course WHERE id = ?;";
     private static final String GET_BY_TITLE = "SELECT id, title, status FROM course WHERE title = ?;";
@@ -106,11 +106,9 @@ public class CourseDAOImpl implements CourseDAO {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE)){
             statement.setString(1, course.getTitle());
-            statement.setInt(2, course.getId());
-            int rows = statement.executeUpdate();
-            if (rows == 0){
-                LOG.warn(String.format("Course with id=%s not found", course.getId()));
-            }
+            statement.setString(2, course.getCourseStatus().getCourseStatus());
+            statement.setInt(3, course.getId());
+            statement.execute();
         } catch (SQLException e) {
             LOG.error(String.format("Error updating course with title: %s", course.getTitle()), e);
         }

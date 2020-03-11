@@ -27,18 +27,23 @@ public class UpdateCourse implements Command {
     public void process() {
         view.write("Enter course ID for update");
         int id = validateNumber(view.read());
-        view.write("Enter update to course title");
-        String title = validate(view.read());
-         view.write("Enter update to course status");
-        String value = validate(view.read());
-        Course course = new Course();
-        course.setId(id);
-        course.setTitle(title);
-        Optional<CourseStatus> tmp = CourseStatus.getCourseStatusValue(value.toLowerCase());
-        CourseStatus status = tmp.isEmpty() ? null : tmp.get();
-        course.setCourseStatus(status);
-        courseDAO.update(course);
-        view.write(String.format("Course updated with title: %s", course.getTitle()));
+        Course ifExist = courseDAO.get(id);
+        if (ifExist != null) {
+            view.write("Enter update to course title");
+            String title = validate(view.read());
+            view.write("Enter update to course status");
+            String value = validate(view.read());
+            Course course = new Course();
+            course.setId(id);
+            course.setTitle(title);
+            Optional<CourseStatus> tmp = CourseStatus.getCourseStatusValue(value.toUpperCase());
+            CourseStatus status = tmp.isEmpty() ? null : tmp.get();
+            course.setCourseStatus(status);
+            courseDAO.update(course);
+            view.write(String.format("Course updated with title: %s", course.getTitle()));
+        }else {
+            view.write(String.format("Course with id=%d not exist!", id));
+        }
     }
 
     private String validate(String value) {
