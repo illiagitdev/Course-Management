@@ -19,6 +19,8 @@ public class CourseDAOImpl implements CourseDAO {
     private static final String INSERT = "INSERT INTO course(title, status) VALUES(?, ?);";
     private static final String GET_ALL = "SELECT id, title, status FROM course;";
     private static final String UPDATE = "UPDATE course SET title = ?, status = ? WHERE id = ?;";
+    private static final String UPDATE_TITLE = "UPDATE course SET title = ? WHERE id = ?;";
+    private static final String UPDATE_STATUS = "UPDATE course SET status = ? WHERE id = ?;";
     private static final String DELETE = "DELETE FROM course WHERE id = ?;";
     private static final String GET_BY_ID = "SELECT id, title, status FROM course WHERE id = ?;";
     private static final String GET_BY_TITLE = "SELECT id, title, status FROM course WHERE title = ?;";
@@ -115,13 +117,29 @@ public class CourseDAOImpl implements CourseDAO {
     }
 
     @Override
-    public void update(String title) {
-
+    public void updateTitle(Course course) {
+        LOG.debug(String.format("Update: course.title=%s", course.getTitle()));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_TITLE)){
+            statement.setString(1, course.getTitle());
+            statement.setInt(2, course.getId());
+            statement.execute();
+        } catch (SQLException e) {
+            LOG.error(String.format("Error updating course with title: %s", course.getTitle()), e);
+        }
     }
 
     @Override
-    public void update(CourseStatus status) {
-
+    public void updateStatus(Course course) {
+        LOG.debug(String.format("Update: course.status=%s", course.getCourseStatus()));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_STATUS)){
+            statement.setString(1, course.getCourseStatus().getCourseStatus());
+            statement.setInt(2, course.getId());
+            statement.execute();
+        } catch (SQLException e) {
+            LOG.error(String.format("Error updating course with status: %s", course.getCourseStatus()), e);
+        }
     }
 
     private Course buildCourse(ResultSet resultSet) throws SQLException {

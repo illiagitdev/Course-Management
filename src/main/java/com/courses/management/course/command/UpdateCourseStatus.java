@@ -9,40 +9,39 @@ import com.courses.management.course.CourseStatus;
 
 import java.util.Optional;
 
-public class UpdateCourse implements Command {
+public class UpdateCourseStatus implements Command {
     private final View view;
     private CourseDAO courseDAO;
 
-    public UpdateCourse(View view) {
+    public UpdateCourseStatus(View view) {
         this.view = view;
         courseDAO = new CourseDAOImpl();
     }
 
     @Override
     public String command() {
-        return "update_course";
+        return "update_course_status";
     }
 
     @Override
     public void process() {
-        view.write("Enter course ID for update");
-        int id = validateNumber(view.read());
-        Course ifExist = courseDAO.get(id);
+        view.write("Enter course title for update");
+        String title = validate(view.read());
+        Course ifExist = courseDAO.get(title);
         if (ifExist != null) {
-            view.write("Enter update to course title");
-            String title = validate(view.read());
             view.write("Enter update to course status");
             String value = validate(view.read());
-            Course course = new Course();
-            course.setId(id);
-            course.setTitle(title);
             Optional<CourseStatus> tmp = CourseStatus.getCourseStatusValue(value.toUpperCase());
             CourseStatus status = tmp.isEmpty() ? null : tmp.get();
-            course.setCourseStatus(status);
-            courseDAO.update(course);
-            view.write(String.format("Course updated with title: %s", course.getTitle()));
+            if (status != null) {
+                ifExist.setCourseStatus(status);
+                courseDAO.update(ifExist);
+                view.write(String.format("Course updated with status: %s", ifExist.getCourseStatus()));
+            }else {
+                view.write("Status not found!");
+            }
         }else {
-            view.write(String.format("Course with id=%d not exist!", id));
+            view.write(String.format("Course with title=%s not exist!", title));
         }
     }
 
@@ -50,16 +49,6 @@ public class UpdateCourse implements Command {
         while (value.trim().isEmpty()){
             value = view.read();
         }
-        return value;
-    }
-
-    private int validateNumber(String value) {
-        int res = 0;
-        try {
-            res = Integer.parseInt(value);
-        } catch (RuntimeException e) {
-            view.write("Input not a number!");
-        }
-        return res;
+        return value.toUpperCase();
     }
 }
