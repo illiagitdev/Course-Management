@@ -25,8 +25,12 @@ public class GetCourseById implements Command {
         view.write("To find course enter course id");
         int id = validateNumber(view.read());
         Course course = courseDAO.get(id);
-        view.write("Course\t\tcourse status");
-        view.write(String.format("%d\t%s\t%s", course.getId(), course.getTitle(), course.getCourseStatus()));
+        if (course == null){
+            view.write(String.format("Course with id=%d not exist!", id));
+        }else {
+            view.write("Course\t\tcourse status");
+            view.write(String.format("%d\t%s\t%s", course.getId(), course.getTitle(), course.getCourseStatus()));
+        }
     }
 
     private int validateNumber(String value) {

@@ -25,8 +25,12 @@ public class GetCourseByTitle implements Command {
         view.write("To find course enter it's title");
         String title = validate(view.read());
         Course course = courseDAO.get(title);
-        view.write("Course\t\tcourse status");
-        view.write(String.format("%s\t\t%s", course.getTitle(), course.getCourseStatus()));
+        if (course == null){
+            view.write(String.format("Course with title=%s not exist!", title));
+        }else {
+            view.write("Course\t\tcourse status");
+            view.write(String.format("%s\t\t%s", course.getTitle(), course.getCourseStatus()));
+        }
     }
 
     private String validate(String value) {

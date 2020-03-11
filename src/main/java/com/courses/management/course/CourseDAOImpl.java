@@ -37,22 +37,6 @@ public class CourseDAOImpl implements CourseDAO {
     }
 
     @Override
-    public void update(Course course) {
-        LOG.debug(String.format("Update: course.title=%s", course.getTitle()));
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE)){
-            statement.setString(1, course.getTitle());
-            statement.setInt(2, course.getId());
-            int rows = statement.executeUpdate();
-            if (rows == 0){
-                LOG.warn(String.format("Course with id=%s not found", course.getId()));
-            }
-        } catch (SQLException e) {
-            LOG.error(String.format("Error updating course with title: %s", course.getTitle()), e);
-        }
-    }
-
-    @Override
     public void delete(int id) {
         LOG.debug(String.format("delete: course.id=%s", id));
         try (Connection connection = dataSource.getConnection();
@@ -117,7 +101,28 @@ public class CourseDAOImpl implements CourseDAO {
     }
 
     @Override
-    public void updateTitle(String title) {
+    public void update(Course course) {
+        LOG.debug(String.format("Update: course.title=%s", course.getTitle()));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE)){
+            statement.setString(1, course.getTitle());
+            statement.setInt(2, course.getId());
+            int rows = statement.executeUpdate();
+            if (rows == 0){
+                LOG.warn(String.format("Course with id=%s not found", course.getId()));
+            }
+        } catch (SQLException e) {
+            LOG.error(String.format("Error updating course with title: %s", course.getTitle()), e);
+        }
+    }
+
+    @Override
+    public void update(String title) {
+
+    }
+
+    @Override
+    public void update(CourseStatus status) {
 
     }
 
@@ -125,9 +130,9 @@ public class CourseDAOImpl implements CourseDAO {
         Course course = new Course();
         course.setId(resultSet.getInt("id"));
         course.setTitle(resultSet.getString("title"));
-        Optional<CourseStatus> status = CourseStatus.getCourseStatusValue(resultSet.getString("sex").toLowerCase());
-        CourseStatus sex = status.isEmpty() ? null : status.get();
-        course.setCourseStatus(sex);
+        Optional<CourseStatus> status = CourseStatus.getCourseStatusValue(resultSet.getString("status").toUpperCase());
+        CourseStatus courseStatus = status.isEmpty() ? null : status.get();
+        course.setCourseStatus(courseStatus);
         return course;
     }
 }
