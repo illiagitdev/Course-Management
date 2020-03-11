@@ -18,6 +18,7 @@ public class CourseDAOImpl implements CourseDAO {
     private HikariDataSource dataSource = DatabaseConnector.getConnector();
     private static final String INSERT = "INSERT INTO course(title, status) VALUES(?, ?);";
     private static final String GET_ALL = "SELECT id, title, status FROM course;";
+    private static final String GET_ALL_STATUS = "SELECT id, title, status FROM course WHERE status = ?;";
     private static final String UPDATE = "UPDATE course SET title = ?, status = ? WHERE id = ?;";
     private static final String UPDATE_TITLE = "UPDATE course SET title = ? WHERE id = ?;";
     private static final String UPDATE_STATUS = "UPDATE course SET status = ? WHERE id = ?;";
@@ -90,6 +91,25 @@ public class CourseDAOImpl implements CourseDAO {
         List<Course> courses = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(GET_ALL)){
+            ResultSet resultSet = statement.executeQuery();
+            courses = new ArrayList<>();
+            while (resultSet.next()){
+                Course course = buildCourse(resultSet);
+                courses.add(course);
+            }
+        } catch (SQLException e) {
+            LOG.error("Error retrieving courses.", e);
+        }
+        return courses;
+    }
+
+    @Override
+    public List<Course> getAll(String status) {
+        LOG.debug(String.format("getAll: status=%s", status));
+        List<Course> courses = null;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_ALL_STATUS)){
+            statement.setString(1, status);
             ResultSet resultSet = statement.executeQuery();
             courses = new ArrayList<>();
             while (resultSet.next()){
