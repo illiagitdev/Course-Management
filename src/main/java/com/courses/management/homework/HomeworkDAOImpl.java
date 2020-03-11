@@ -1,6 +1,5 @@
 package com.courses.management.homework;
 
-import com.courses.management.common.DataAccessObject;
 import com.courses.management.common.DatabaseConnector;
 import com.courses.management.course.CourseDAOImpl;
 import com.zaxxer.hikari.HikariDataSource;
@@ -14,7 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeworkDAOImpl implements DataAccessObject<Homework>, HomeworkDAO {
+public class HomeworkDAOImpl implements HomeworkDAO {
     private static final Logger LOG = LogManager.getLogger(CourseDAOImpl.class);
     private HikariDataSource dataSource = DatabaseConnector.getConnector();
     private static final String INSERT = "INSERT INTO home_work(title, text, file_path) VALUES(?, ?, ?);";

@@ -1,6 +1,5 @@
 package com.courses.management.user;
 
-import com.courses.management.common.DataAccessObject;
 import com.courses.management.common.DatabaseConnector;
 import com.courses.management.solution.SolutionDAOImpl;
 import com.zaxxer.hikari.HikariDataSource;
@@ -14,7 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDAOImpl implements DataAccessObject<User>, UserDAO {
+public class UserDAOImpl implements UserDAO {
     private static final Logger LOG = LogManager.getLogger(SolutionDAOImpl.class);
     private HikariDataSource dataSource = DatabaseConnector.getConnector();
     private static final String INSERT = "INSERT INTO users(first_name, last_name, email, user_role, status) " +

@@ -1,6 +1,5 @@
 package com.courses.management.solution;
 
-import com.courses.management.common.DataAccessObject;
 import com.courses.management.common.DatabaseConnector;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.logging.log4j.LogManager;
@@ -13,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SolutionDAOImpl implements DataAccessObject<Solutions>, SolutionDao {
+public class SolutionDAOImpl implements SolutionDao {
     private static final Logger LOG = LogManager.getLogger(SolutionDAOImpl.class);
     private HikariDataSource dataSource = DatabaseConnector.getConnector();
     private static final String INSERT = "INSERT INTO solution(text, status, mark) VALUES(?, ?, ?);";
