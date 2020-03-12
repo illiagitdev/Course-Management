@@ -55,7 +55,7 @@ public class Help implements Command {
         view.write("    user_by_id      |   show user by id------------------");
         view.write("    find_user_by_email  |   find user by email------------------");
         view.write("    all_users       |   show all users-------------------");
-        view.write("    users_by_course_id  |   show all users by course id--");
+        view.write("    find_users_by_course_status  |   show all users by course and status--");
         view.write("");
         view.write("    exit            |   exit application----------------");
         view.write("--------------------------------------------------------");

@@ -29,8 +29,8 @@ public class UserDAOImpl implements UserDAO {
     private static final String GET_BY_EMAIL = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
             "FROM users WHERE email = ?;";
     private static final String GET_ALL = "SELECT id, first_name, last_name, email, user_role, status, course_id FROM users;";
-    private static final String GET_ALL_BY_COURSE_ID = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
-            "FROM users WHERE course_id = ?;";
+    private static final String GET_ALL_BY_COURSE_STATUS = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
+            "FROM users WHERE status = ? AND course_id = (SELECT id FROM  course WHERE title LIKE ?);";
 
     @Override
     public void create(User user) {
@@ -150,23 +150,16 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> getByCourseAndStatus(int courseId) {
+    public List<User> getByCourseAndStatus(String courseTitle, String status) {
         List<User> users = null;
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(GET_ALL_BY_COURSE_ID)){
-            statement.setInt(1 ,courseId);
+             PreparedStatement statement = connection.prepareStatement(GET_ALL_BY_COURSE_STATUS)){
+            statement.setString(1 , status);
+            statement.setString(2 , courseTitle);
             ResultSet resultSet = statement.executeQuery();
             users = new ArrayList<>();
             while (resultSet.next()){
-                User user = new User();
-                user.setId(resultSet.getInt(1));
-                user.setFirstName(resultSet.getString(2));
-                user.setLastName(resultSet.getString(3));
-                user.setEmail(resultSet.getString(4));
-                String role = resultSet.getString(5);
-                user.setUserRole(UserRole.valueOf(role));
-                String status = resultSet.getString(6);
-                user.setStatus(UserStatus.valueOf(status));
+                User user = buildUser(resultSet);
                 users.add(user);
             }
         } catch (SQLException e) {
