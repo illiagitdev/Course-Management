@@ -19,8 +19,8 @@ import java.util.Optional;
 public class UserDAOImpl implements UserDAO {
     private static final Logger LOG = LogManager.getLogger(SolutionDAOImpl.class);
     private HikariDataSource dataSource = DatabaseConnector.getConnector();
-    private static final String INSERT = "INSERT INTO users(first_name, last_name, email, user_role, status) " +
-            "VALUES(?, ?, ?, ?, ?);";
+    private static final String INSERT = "INSERT INTO users(first_name, last_name, email, user_role, status, course_id) " +
+            "VALUES(?, ?, ?, ?, ?, ?);";
     private static final String UPDATE = "UPDATE users SET first_name = ?, last_name = ?, email = ? " +
             "WHERE id = ?;";
     private static final String DELETE = "DELETE FROM users WHERE id = ?;";
@@ -44,7 +44,11 @@ public class UserDAOImpl implements UserDAO {
             statement.setString(2, user.getLastName());
             statement.setString(3, user.getEmail());
             statement.setString(4, user.getUserRole().getRole());
-            statement.setString(5, user.getStatus().getStatus());
+            if (user.getCourse() == null) {
+                statement.setInt(6, 0);
+            }else {
+                statement.setInt(6, user.getCourse().getId());
+            }
             statement.execute();
         } catch (SQLException e) {
             LOG.error(String.format("Error creating user: %s", user.getFirstName()), e);
