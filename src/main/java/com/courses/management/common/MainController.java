@@ -53,6 +53,7 @@ public class MainController {
                 new UpdateUser(view),
                 new DeleteUser(view),
                 new GetUserById(view),
+                new GetUserByEmail(view),
                 new GetAllUser(view),
                 new GetCourseUsers(view),
 

@@ -1,6 +1,8 @@
 package com.courses.management.user;
 
 import com.courses.management.common.DatabaseConnector;
+import com.courses.management.course.Course;
+import com.courses.management.course.CourseDAOImpl;
 import com.courses.management.solution.SolutionDAOImpl;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.logging.log4j.LogManager;
@@ -12,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class UserDAOImpl implements UserDAO {
     private static final Logger LOG = LogManager.getLogger(SolutionDAOImpl.class);
@@ -21,10 +24,12 @@ public class UserDAOImpl implements UserDAO {
     private static final String UPDATE = "UPDATE users SET first_name = ?, last_name = ?, email = ? " +
             "WHERE id = ?;";
     private static final String DELETE = "DELETE FROM users WHERE id = ?;";
-    private static final String GET_BY_ID = "SELECT id, first_name, last_name, email, user_role, status " +
+    private static final String GET_BY_ID = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
             "FROM users WHERE id = ?;";
-    private static final String GET_ALL = "SELECT id, first_name, last_name, email, user_role, status FROM users;";
-    private static final String GET_ALL_BY_COURSE_ID = "SELECT id, first_name, last_name, email, user_role, status " +
+    private static final String GET_BY_EMAIL = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
+            "FROM users WHERE email = ?;";
+    private static final String GET_ALL = "SELECT id, first_name, last_name, email, user_role, status, course_id FROM users;";
+    private static final String GET_ALL_BY_COURSE_ID = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
             "FROM users WHERE course_id = ?;";
 
     @Override
@@ -80,25 +85,43 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User get(int id) {
         User user = null;
-        LOG.debug(String.format("get(id): user.id=%s", id));
+        LOG.debug(String.format("get(id): user.id=%d", id));
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(GET_BY_ID)){
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-            user = new User();
-            user.setId(resultSet.getInt(1));
-            user.setFirstName(resultSet.getString(2));
-            user.setLastName(resultSet.getString(3));
-            user.setEmail(resultSet.getString(4));
-            String role = resultSet.getString(5);
-            user.setUserRole(UserRole.valueOf(role));
-            String status = resultSet.getString(6);
-            user.setStatus(UserStatus.valueOf(status));
+            user = buildUser(resultSet);
         } catch (SQLException e) {
             LOG.error("Error retrieving user.", e);
         }
         return user;
+    }
+
+    @Override
+    public User getByEmail(String email) {
+        User user = null;
+        LOG.debug(String.format("get(id): user.email=%s", email));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_BY_EMAIL)){
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            user = buildUser(resultSet);
+        } catch (SQLException e) {
+            LOG.error("Error retrieving user.", e);
+        }
+        return user;
+    }
+
+    @Override
+    public List<User> getByName(String firstName, String lastName) {
+        return null;
+    }
+
+    @Override
+    public List<User> getByStatus(String status) {
+        return null;
     }
 
     @Override
@@ -127,7 +150,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> getByCourse(int courseId) {
+    public List<User> getByCourseAndStatus(int courseId) {
         List<User> users = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(GET_ALL_BY_COURSE_ID)){
@@ -150,5 +173,27 @@ public class UserDAOImpl implements UserDAO {
             LOG.error("Error retrieving users by course id.", e);
         }
         return users;
+    }
+
+    private User buildUser(ResultSet resultSet) throws SQLException {
+        User user = new User();
+        user.setId(resultSet.getInt("id"));
+        user.setFirstName(resultSet.getString("first_name"));
+        user.setLastName(resultSet.getString("last_name"));
+        user.setEmail(resultSet.getString("email"));
+        Optional<UserRole> someRole = UserRole.getUserRole(resultSet.getString("user_role").toUpperCase());
+        UserRole role = someRole.isEmpty() ? null : someRole.get();
+        user.setUserRole(role);
+        Optional<UserStatus> status = UserStatus.getUserStatus(resultSet.getString("status").toUpperCase());
+        UserStatus userStatus = status.isEmpty() ? null : status.get();
+        user.setStatus(userStatus);
+        int courseId = resultSet.getInt("course_id");
+        /*  call CourseDAOImpl to get course for user*/
+        Course course =  null;
+        if(courseId > 0) {
+            course = (new CourseDAOImpl()).get(courseId);
+        }
+        user.setCourse(course);
+        return user;
     }
 }
