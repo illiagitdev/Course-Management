@@ -9,4 +9,5 @@ public interface UserDAO extends DataAccessObject<User> {
     List<User> getByName(String firstName, String lastName);
     List<User> getByStatus(String status);
     List<User> getByCourseAndStatus(String courseTitle, String status);
+    void deleteByEmail(String email);
 }

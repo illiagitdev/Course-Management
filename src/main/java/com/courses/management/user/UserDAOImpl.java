@@ -24,6 +24,7 @@ public class UserDAOImpl implements UserDAO {
     private static final String UPDATE = "UPDATE users SET first_name = ?, last_name = ?, email = ? " +
             "WHERE id = ?;";
     private static final String DELETE = "DELETE FROM users WHERE id = ?;";
+    private static final String DELETE_BY_EMAIL = "DELETE FROM users WHERE email = ?;";
     private static final String GET_BY_ID = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
             "FROM users WHERE id = ?;";
     private static final String GET_BY_USER_STATUS = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
@@ -86,6 +87,21 @@ public class UserDAOImpl implements UserDAO {
             }
         } catch (SQLException e) {
             LOG.error(String.format("Error deleting user with id: %s", id), e);
+        }
+    }
+
+    @Override
+    public void deleteByEmail(String email) {
+        LOG.debug(String.format("delete: users.email=%s", email));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_BY_EMAIL)){
+            statement.setString(1, email);
+            int index = statement.executeUpdate();
+            if (index == 0 ){
+                LOG.warn(String.format("no user with email=%s found", email));
+            }
+        } catch (SQLException e) {
+            LOG.error(String.format("Error deleting user with email: %s", email), e);
         }
     }
 
