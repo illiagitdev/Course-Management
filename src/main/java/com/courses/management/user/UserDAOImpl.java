@@ -32,6 +32,8 @@ public class UserDAOImpl implements UserDAO {
     private static final String GET_ALL = "SELECT id, first_name, last_name, email, user_role, status, course_id FROM users;";
     private static final String GET_ALL_BY_COURSE_STATUS = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
             "FROM users WHERE status = ? AND course_id = (SELECT id FROM  course WHERE title LIKE ?);";
+    private static final String GET_BY_FIRST_LAST_NAMES = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
+            "FROM users WHERE first_name = ? AND last_name = ?;";
 
     @Override
     public void create(User user) {
@@ -117,7 +119,21 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getByName(String firstName, String lastName) {
-        return null;
+        List<User> users = null;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_BY_FIRST_LAST_NAMES)){
+            statement.setString(1, firstName);
+            statement.setString(2, lastName);
+            ResultSet resultSet = statement.executeQuery();
+            users = new ArrayList<>();
+            while (resultSet.next()){
+                User user = buildUser(resultSet);
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            LOG.error("Error retrieving users.", e);
+        }
+        return users;
     }
 
     @Override
