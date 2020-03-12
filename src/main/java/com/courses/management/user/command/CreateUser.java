@@ -30,7 +30,7 @@ public class CreateUser implements Command {
         String lastName = validate(view.read());
         user.setLastName(lastName);
         boolean invalidEmail = true;
-        String email =null;
+        String email;
         while (invalidEmail) {
             view.write("Enter user email:");
             email = validate(view.read());

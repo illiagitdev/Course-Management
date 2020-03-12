@@ -2,6 +2,7 @@ package com.courses.management.user.command;
 
 import com.courses.management.common.Command;
 import com.courses.management.common.View;
+import com.courses.management.user.User;
 import com.courses.management.user.UserDAO;
 import com.courses.management.user.UserDAOImpl;
 
@@ -23,8 +24,13 @@ public class DeleteUser implements Command {
     public void process() {
         view.write("Enter user ID for delete");
         int id = validateNumber(view.read());
-        userDAO.delete(id);
-        view.write(String.format("User deleted, id: %d", id));
+        User isExist = userDAO.get(id);
+        if (isExist != null){
+            userDAO.delete(id);
+            view.write(String.format("User deleted, id: %d", id));
+        } else {
+            view.write(String.format("User with id=%d not exist.", id));
+        }
     }
 
     private int validateNumber(String value) {
