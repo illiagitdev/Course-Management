@@ -57,6 +57,7 @@ public class MainController {
                 new GetAllUser(view),
                 new GetUsersByCourseStatus(view),
                 new GetUsersByActiveStatus(view),
+                new GetUsersByFirstLastNames(view),
 
                 new Exit(view)
         );
