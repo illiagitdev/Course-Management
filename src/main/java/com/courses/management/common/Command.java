@@ -3,7 +3,7 @@ package com.courses.management.common;
 import com.courses.management.common.command.util.InputString;
 
 public interface Command {
-    int COMMAND_NAME = 0;
+    int COMMAND_NAME_INDEX = 0;
     String command();
 
     void process(InputString input);
@@ -11,6 +11,6 @@ public interface Command {
     default boolean canProcess(InputString userInput) {
         String[] splitFormat = command().split("\\|");
         String[] inputParameters = userInput.getParameters();
-        return inputParameters[COMMAND_NAME].equals(splitFormat[COMMAND_NAME]);
+        return inputParameters[COMMAND_NAME_INDEX].equals(splitFormat[COMMAND_NAME_INDEX]);
     }
 }
