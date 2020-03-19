@@ -10,28 +10,28 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class CourseDAOImpl implements CourseDAO {
     private static final Logger LOG = LogManager.getLogger(CourseDAOImpl.class);
     private HikariDataSource dataSource = DatabaseConnector.getConnector();
     private static final String INSERT = "INSERT INTO course(title, status) VALUES(?, ?);";
     private static final String FIND_COURSE_BY_TITLE = "SELECT id, title, status FROM course WHERE title = ?;";
-    private static final String GET_ALL = "SELECT id, title, status FROM course;";
+    private static final String UPDATE_COURSE = "UPDATE course SET title = ?, status = ? WHERE id = ?;";
+    private static final String FIND_COURSE_BY_ID = "SELECT id, title, status FROM course WHERE id = ?;";
+    private static final String FIND_ALL_COURSES = "SELECT id, title, status FROM course;";
     private static final String GET_ALL_STATUS = "SELECT id, title, status FROM course WHERE status = ?;";
-    private static final String UPDATE = "UPDATE course SET title = ?, status = ? WHERE id = ?;";
     private static final String UPDATE_TITLE = "UPDATE course SET title = ? WHERE id = ?;";
     private static final String UPDATE_STATUS = "UPDATE course SET status = ? WHERE id = ?;";
     private static final String DELETE = "DELETE FROM course WHERE id = ?;";
     private static final String DELETE_TITLE = "DELETE FROM course WHERE title = ?;";
-    private static final String GET_BY_ID = "SELECT id, title, status FROM course WHERE id = ?;";
 
     @Override
     public void create(Course course) {
         LOG.debug(String.format("create: course.title=%s", course.getTitle()));
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(INSERT)){
+             PreparedStatement statement = connection.prepareStatement(INSERT)) {
             statement.setString(1, course.getTitle());
             statement.setString(2, course.getCourseStatus().getCourseStatus());
             statement.execute();
@@ -43,17 +43,7 @@ public class CourseDAOImpl implements CourseDAO {
 
     @Override
     public void delete(int id) {
-//        LOG.debug(String.format("delete: course.id=%s", id));
-//        try (Connection connection = dataSource.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(DELETE)){
-//            statement.setInt(1, id);
-//            int index = statement.executeUpdate();
-//            if (index == 0 ){
-//                LOG.warn(String.format("no course with id=%s found", id));
-//            }
-//        } catch (SQLException e) {
-//            LOG.error(String.format("Error deleting course with id: %s", id), e);
-//        }
+        throw new UnsupportedOperationException("Course can't be deleted.");
     }
 
 //    @Override
@@ -73,40 +63,32 @@ public class CourseDAOImpl implements CourseDAO {
 
     @Override
     public Course get(int id) {
-//        Course course = null;
-//        LOG.debug(String.format("get(id): course.id=%s", id));
-//        try (Connection connection = dataSource.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(GET_BY_ID)){
-//            statement.setInt(1, id);
-//            ResultSet resultSet = statement.executeQuery();
-//            resultSet.next();
-//            course = buildCourse(resultSet);
-//        } catch (SQLException e) {
-//            LOG.error("Error retrieving course.", e);
-//        }
-//        return course;
-        return null;
+        LOG.debug(String.format("get: course.id=%s", id));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_COURSE_BY_ID)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            return getCourse(resultSet);
+        } catch (SQLException e) {
+            LOG.error(String.format("get: course.id=%s", id), e);
+            throw new SQLCourseException("Error occurred when find a course.");
+        }
     }
 
     @Override
     public List<Course> getAll() {
-//        List<Course> courses = null;
-////        try (Connection connection = dataSource.getConnection();
-////             PreparedStatement statement = connection.prepareStatement(GET_ALL)){
-////            ResultSet resultSet = statement.executeQuery();
-////            courses = new ArrayList<>();
-////            while (resultSet.next()){
-////                Course course = buildCourse(resultSet);
-////                courses.add(course);
-////            }
-////        } catch (SQLException e) {
-////            LOG.error("Error retrieving courses.", e);
-////        }
-////        return courses;
-        return null;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_COURSES)) {
+            ResultSet resultSet = statement.executeQuery();
+            return getCourseList(resultSet);
+        } catch (SQLException e) {
+            LOG.error("getAll", e);
+            throw new SQLCourseException("Error occurred when find all courses.");
+        }
     }
 
-//    @Override
+
+    //    @Override
 //    public List<Course> getAll(String status) {
 //        LOG.debug(String.format("getAll: status=%s", status));
 //        List<Course> courses = null;
@@ -127,31 +109,34 @@ public class CourseDAOImpl implements CourseDAO {
 
     @Override
     public Course get(String title) {
-        LOG.debug(String.format("get: course.title=%s", title));
+        LOG.debug(String.format("debug:get: course.title=%s", title));
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_COURSE_BY_TITLE)){
+             PreparedStatement statement = connection.prepareStatement(FIND_COURSE_BY_TITLE)) {
             statement.setString(1, title);
             ResultSet resultSet = statement.executeQuery();
-            return mapCourse(resultSet);
+            return getCourse(resultSet);
         } catch (SQLException e) {
-            LOG.error(String.format("get: course.title=%s", title), e);
+            LOG.error(String.format("error:get: course.title=%s", title), e);
             throw new SQLCourseException("Error occurred when find a course.");
         }
     }
 
     @Override
     public void update(Course course) {
-//        LOG.debug(String.format("Update: course.title=%s", course.getTitle()));
-//        try (Connection connection = dataSource.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(UPDATE)){
-//            statement.setString(1, course.getTitle());
-//            statement.setString(2, course.getCourseStatus().getCourseStatus());
-//            statement.setInt(3, course.getId());
-//            statement.execute();
-//        } catch (SQLException e) {
-//            LOG.error(String.format("Error updating course with title: %s", course.getTitle()), e);
-//        }
+        LOG.debug(String.format("update: course.title=%s, course.status=%s", course.getTitle(),
+                course.getCourseStatus()));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_COURSE)) {
+            statement.setString(1, course.getTitle());
+            statement.setString(2, course.getCourseStatus().getCourseStatus());
+            statement.setInt(3, course.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            LOG.error(String.format("Error updating course with title: %s", course.getTitle()), e);
+            throw new SQLCourseException("Error occurred when update a course.");
+        }
     }
+
 
 //    @Override
 //    public void updateTitle(Course course) {
@@ -179,16 +164,26 @@ public class CourseDAOImpl implements CourseDAO {
 //        }
 //    }
 
-    private Course mapCourse(ResultSet rs) throws SQLException {
+    private List<Course> getCourseList(ResultSet rs) throws SQLException {
+        List<Course> courses = new ArrayList<>();
+        while (rs.next()) {
+            courses.add(mapCourse(rs));
+        }
+        return courses;
+    }
+
+    private Course getCourse(ResultSet rs) throws SQLException {
         if (rs.next()) {
-            Course course = new Course();
-            course.setId(rs.getInt("id"));
-            course.setTitle(rs.getString("title"));
-            Optional<CourseStatus> status = CourseStatus.getCourseStatusValue(rs.getString("status").toUpperCase());
-            CourseStatus courseStatus = status.isEmpty() ? null : status.get();
-            course.setCourseStatus(CourseStatus.valueOf(rs.getString("status")));
-            return course;
+            return mapCourse(rs);
         }
         return null;
+    }
+
+    private Course mapCourse(ResultSet rs) throws SQLException {
+        Course course = new Course();
+        course.setId(rs.getInt("id"));
+        course.setTitle(rs.getString("title"));
+        course.setCourseStatus(CourseStatus.getCourseStatusValue(rs.getString("status")).get());
+        return course;
     }
 }
