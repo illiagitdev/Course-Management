@@ -10,7 +10,7 @@ public interface Command {
 
     default boolean canProcess(InputString userInput) {
         String[] splitFormat = command().split("\\|");
-        String[] inputPatrameters = userInput.getParameters();
-        return inputPatrameters[COMMAND_NAME].equals(splitFormat[COMMAND_NAME]);
+        String[] inputParameters = userInput.getParameters();
+        return inputParameters[COMMAND_NAME].equals(splitFormat[COMMAND_NAME]);
     }
 }
