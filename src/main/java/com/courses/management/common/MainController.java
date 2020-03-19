@@ -21,6 +21,11 @@ public class MainController {
                 new Help(view),
 
                 new CreateCourse(view),
+                new FindCourse(view),
+                new UpdateCourseTitle(view),
+                new UpdateCourseStatus(view),
+                new ShowCourses(view),
+                new DeleteCourse(view),
 
                 new Exit(view)
         );
@@ -55,5 +60,6 @@ public class MainController {
     private void printError(Exception e) {
         String message = e.getMessage();
         view.write("Error because of " + message);
+        view.write("Please try again.");
     }
 }
