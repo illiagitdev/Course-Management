@@ -2,6 +2,7 @@ package com.courses.management.common.command;
 
 import com.courses.management.common.Command;
 import com.courses.management.common.View;
+import com.courses.management.common.command.util.InputString;
 
 public class Exit implements Command {
     private View view;
@@ -16,7 +17,7 @@ public class Exit implements Command {
     }
 
     @Override
-    public void process() {
+    public void process(InputString input) {
         view.write("Exit application");
         System.exit(0);
     }

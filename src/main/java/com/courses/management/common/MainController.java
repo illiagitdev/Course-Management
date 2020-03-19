@@ -2,6 +2,7 @@ package com.courses.management.common;
 
 import com.courses.management.common.command.Exit;
 import com.courses.management.common.command.Help;
+import com.courses.management.common.command.util.InputString;
 import com.courses.management.course.command.*;
 import com.courses.management.homework.command.*;
 import com.courses.management.solution.command.*;
@@ -23,42 +24,42 @@ public class MainController {
                 new Help(view),
 
                 new CreateCourse(view),
-                new UpdateCourse(view),
-                new UpdateCourseTitle(view),
-                new UpdateCourseStatus(view),
-                new GetAllCourses(view),
-                new GetCoursesByStatus(view),
-                new DeleteCourse(view),
-                new DeleteCourseTitle(view),
-                new GetCourseById(view),
-                new GetCourseByTitle(view),
-
-                new CreateHomework(view),
-                new UpdateHomework(view),
-                new DeleteHomework(view),
-                new GetHomeworkById(view),
-                new GetAllHomework(view),
-                new GetAllHomeworkByCourse(view),
-
-                new CreateSolution(view),
-                new UpdateSolution(view),
-                new DeleteSolution(view),
-                new GetSolutionById(view),
-                new GetAllSolutions(view),
-                new GetSolutionsByUser(view),
-                new GetSolutionsByHomework(view),
-                new GetSolutionsByUserHomeworkId(view),
-
-                new CreateUser(view),
-                new UpdateUser(view),
-                new DeleteUser(view),
-                new DeleteUserByEmail(view),
-                new GetUserById(view),
-                new GetUserByEmail(view),
-                new GetAllUser(view),
-                new GetUsersByCourseStatus(view),
-                new GetUsersByActiveStatus(view),
-                new GetUsersByFirstLastNames(view),
+//                new UpdateCourse(view),
+//                new UpdateCourseTitle(view),
+//                new UpdateCourseStatus(view),
+//                new GetAllCourses(view),
+//                new GetCoursesByStatus(view),
+//                new DeleteCourse(view),
+//                new DeleteCourseTitle(view),
+//                new GetCourseById(view),
+//                new GetCourseByTitle(view),
+//
+//                new CreateHomework(view),
+//                new UpdateHomework(view),
+//                new DeleteHomework(view),
+//                new GetHomeworkById(view),
+//                new GetAllHomework(view),
+//                new GetAllHomeworkByCourse(view),
+//
+//                new CreateSolution(view),
+//                new UpdateSolution(view),
+//                new DeleteSolution(view),
+//                new GetSolutionById(view),
+//                new GetAllSolutions(view),
+//                new GetSolutionsByUser(view),
+//                new GetSolutionsByHomework(view),
+//                new GetSolutionsByUserHomeworkId(view),
+//
+//                new CreateUser(view),
+//                new UpdateUser(view),
+//                new DeleteUser(view),
+//                new DeleteUserByEmail(view),
+//                new GetUserById(view),
+//                new GetUserByEmail(view),
+//                new GetAllUser(view),
+//                new GetUsersByCourseStatus(view),
+//                new GetUsersByActiveStatus(view),
+//                new GetUsersByFirstLastNames(view),
 
                 new Exit(view)
         );
@@ -75,11 +76,23 @@ public class MainController {
 
     private void doCommand(String input) {
         LOG.debug(String.format("doCommand: input=%s", input));
+        InputString entry = new InputString(input);
         for (Command command: commands){
-            if (command.canProcess(input)){
-                command.process();
+            try {
+                if (command.canProcess(entry)){
+                    command.process(entry);
+                    break;
+                }
+            } catch (Exception e) {
+                LOG.warn(String.format("doCommand: WARN %s", e.getMessage()));
+                printError(e);
                 break;
             }
         }
+    }
+
+    private void printError(Exception e) {
+        String message = e.getMessage();
+        view.write("Error because of " + message);
     }
 }
