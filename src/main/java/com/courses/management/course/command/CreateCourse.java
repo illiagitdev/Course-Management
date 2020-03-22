@@ -2,6 +2,7 @@ package com.courses.management.course.command;
 
 import com.courses.management.common.Command;
 import com.courses.management.common.View;
+import com.courses.management.common.command.util.Commands;
 import com.courses.management.common.command.util.InputString;
 import com.courses.management.course.*;
 
@@ -16,7 +17,7 @@ public class CreateCourse implements Command {
 
     @Override
     public String command() {
-        return "create_course|title";
+        return Commands.CREATE_COURSE;
     }
 
     @Override

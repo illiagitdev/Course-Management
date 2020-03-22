@@ -2,6 +2,7 @@ package com.courses.management.course.command;
 
 import com.courses.management.common.Command;
 import com.courses.management.common.View;
+import com.courses.management.common.command.util.Commands;
 import com.courses.management.common.command.util.InputString;
 import com.courses.management.course.Course;
 import com.courses.management.course.CourseDAO;
@@ -19,7 +20,7 @@ public class DeleteCourse implements Command {
 
     @Override
     public String command() {
-        return "delete_course|title";
+        return Commands.DELETE_COURSE;
     }
 
     @Override

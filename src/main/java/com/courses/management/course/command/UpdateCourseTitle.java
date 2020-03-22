@@ -2,6 +2,7 @@ package com.courses.management.course.command;
 
 import com.courses.management.common.Command;
 import com.courses.management.common.View;
+import com.courses.management.common.command.util.Commands;
 import com.courses.management.common.command.util.InputString;
 import com.courses.management.course.Course;
 import com.courses.management.course.CourseDAO;
@@ -20,7 +21,7 @@ public class UpdateCourseTitle implements Command {
 
     @Override
     public String command() {
-        return "update_course_title|oldTitle|newTitle";
+        return Commands.UPDATE_COURSE_TITLE;
     }
 
     @Override
