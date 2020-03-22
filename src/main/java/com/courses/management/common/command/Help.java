@@ -52,6 +52,10 @@ public class Help implements Command {
         view.write("\t|\t-> move course to DELETED status");
         view.write("");
 
+        view.write(String.format("\t| %s", CREATE_USER));
+        view.write("\t|\t-> create user");
+        view.write("");
+
         view.write(String.format("\t| %s", EXIT));
         view.write("\t|\t-> exit application");
         view.write(divide);

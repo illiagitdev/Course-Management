@@ -1,7 +1,6 @@
 package com.courses.management.user;
 
 import com.courses.management.course.Course;
-import com.courses.management.course.CourseDAOImpl;
 import com.courses.management.solution.SolutionDAOImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -125,7 +124,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User getByEmail(String email) {
+    public User get(String email) {
         User user = null;
         LOG.debug(String.format("get(id): user.email=%s", email));
         try (Connection connection = dataSource.getConnection();

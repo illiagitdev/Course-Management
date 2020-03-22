@@ -9,6 +9,7 @@ public class Commands {
     public static final String UPDATE_COURSE_STATUS = "update_course_status|title|status";
     public static final String FIND_COURSE = "find_course|title";
     public static final String SHOW_COURSES = "show_courses";
+    public static final String CREATE_USER = "create_user|firstName|lastName|email";
 
     private Commands() {
         throw new UnsupportedOperationException("Impossible to instantiate class!");

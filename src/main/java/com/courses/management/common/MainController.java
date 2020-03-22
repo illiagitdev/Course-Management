@@ -5,6 +5,8 @@ import com.courses.management.common.command.Help;
 import com.courses.management.common.command.util.InputString;
 import com.courses.management.course.CourseDAOImpl;
 import com.courses.management.course.command.*;
+import com.courses.management.user.UserDAOImpl;
+import com.courses.management.user.command.CreateUser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,6 +30,7 @@ public class MainController {
                 new UpdateCourseStatus(view, new CourseDAOImpl(dataSource)),
                 new ShowCourses(view, new CourseDAOImpl(dataSource)),
                 new DeleteCourse(view, new CourseDAOImpl(dataSource)),
+                new CreateUser(view, new UserDAOImpl(dataSource)),
 
                 new Exit(view)
         );
