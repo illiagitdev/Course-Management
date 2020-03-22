@@ -64,3 +64,6 @@ alter table solution owner to postgres;
 ALTER TABLE course ADD UNIQUE (title);
 
 ALTER TABLE users ADD UNIQUE (email);
+
+ALTER TABLE users ALTER COLUMN first_name SET NOT NULL;
+ALTER TABLE users ALTER COLUMN last_name SET NOT NULL;
