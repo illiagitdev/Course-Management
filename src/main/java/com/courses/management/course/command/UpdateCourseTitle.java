@@ -6,7 +6,6 @@ import com.courses.management.common.command.util.Commands;
 import com.courses.management.common.command.util.InputString;
 import com.courses.management.course.Course;
 import com.courses.management.course.CourseDAO;
-import com.courses.management.course.CourseDAOImpl;
 
 import java.util.Objects;
 
@@ -14,9 +13,9 @@ public class UpdateCourseTitle implements Command {
     private View view;
     private CourseDAO courseDAO;
 
-    public UpdateCourseTitle(View view) {
+    public UpdateCourseTitle(View view, CourseDAO dao) {
         this.view = view;
-        this.courseDAO = new CourseDAOImpl();
+        this.courseDAO = dao;
     }
 
     @Override

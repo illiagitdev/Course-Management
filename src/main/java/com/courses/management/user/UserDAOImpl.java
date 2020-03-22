@@ -1,13 +1,12 @@
 package com.courses.management.user;
 
-import com.courses.management.common.DatabaseConnector;
 import com.courses.management.course.Course;
 import com.courses.management.course.CourseDAOImpl;
 import com.courses.management.solution.SolutionDAOImpl;
-import com.zaxxer.hikari.HikariDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +17,6 @@ import java.util.Optional;
 
 public class UserDAOImpl implements UserDAO {
     private static final Logger LOG = LogManager.getLogger(SolutionDAOImpl.class);
-    private HikariDataSource dataSource = DatabaseConnector.getConnector();
     private static final String INSERT = "INSERT INTO users(first_name, last_name, email, user_role, status, course_id) " +
             "VALUES(?, ?, ?, ?, ?, ?);";
     private static final String UPDATE = "UPDATE users SET first_name = ?, last_name = ?, email = ? " +
@@ -35,6 +33,11 @@ public class UserDAOImpl implements UserDAO {
             "FROM users WHERE status = ? AND course_id = (SELECT id FROM  course WHERE title LIKE ?);";
     private static final String GET_BY_FIRST_LAST_NAMES = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
             "FROM users WHERE first_name = ? AND last_name = ?;";
+    private DataSource dataSource;
+
+    public UserDAOImpl(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     public void create(User user) {
@@ -226,9 +229,9 @@ public class UserDAOImpl implements UserDAO {
         int courseId = resultSet.getInt("course_id");
         /*  call CourseDAOImpl to get course for user*/
         Course course =  null;
-        if(courseId > 0) {
-            course = (new CourseDAOImpl()).get(courseId);
-        }
+//        if(courseId > 0) {
+//            course = (new CourseDAOImpl()).get(courseId);
+//        }
         user.setCourse(course);
         return user;
     }

@@ -3,10 +3,12 @@ package com.courses.management.common;
 import com.courses.management.common.command.Exit;
 import com.courses.management.common.command.Help;
 import com.courses.management.common.command.util.InputString;
+import com.courses.management.course.CourseDAOImpl;
 import com.courses.management.course.command.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,17 +17,17 @@ public class MainController {
     private View view;
     private List<Command> commands;
 
-    public MainController(View view) {
+    public MainController(View view, DataSource dataSource) {
         this.view = view;
         this.commands = Arrays.asList(
                 new Help(view),
 
-                new CreateCourse(view),
-                new FindCourse(view),
-                new UpdateCourseTitle(view),
-                new UpdateCourseStatus(view),
-                new ShowCourses(view),
-                new DeleteCourse(view),
+                new CreateCourse(view, new CourseDAOImpl(dataSource)),
+                new FindCourse(view, new CourseDAOImpl(dataSource)),
+                new UpdateCourseTitle(view, new CourseDAOImpl(dataSource)),
+                new UpdateCourseStatus(view, new CourseDAOImpl(dataSource)),
+                new ShowCourses(view, new CourseDAOImpl(dataSource)),
+                new DeleteCourse(view, new CourseDAOImpl(dataSource)),
 
                 new Exit(view)
         );

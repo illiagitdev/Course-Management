@@ -1,11 +1,10 @@
 package com.courses.management.homework;
 
-import com.courses.management.common.DatabaseConnector;
 import com.courses.management.course.CourseDAOImpl;
-import com.zaxxer.hikari.HikariDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,7 +14,6 @@ import java.util.List;
 
 public class HomeworkDAOImpl implements HomeworkDAO {
     private static final Logger LOG = LogManager.getLogger(CourseDAOImpl.class);
-    private HikariDataSource dataSource = DatabaseConnector.getConnector();
     private static final String INSERT = "INSERT INTO home_work(title, text, file_path) VALUES(?, ?, ?);";
     private static final String UPDATE = "UPDATE home_work SET title = ? WHERE id = ?;";
     private static final String DELETE = "DELETE FROM home_work WHERE id = ?;";
@@ -23,6 +21,11 @@ public class HomeworkDAOImpl implements HomeworkDAO {
     private static final String GET_ALL = "SELECT id, title, text, file_path FROM home_work;";
     private static final String GET_BY_COURSE_ID = "SELECT id, title, text, file_path FROM home_work " +
             "WHERE course_id = ?;";
+    private DataSource dataSource;
+
+    public HomeworkDAOImpl(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     public void create(Homework homework) {

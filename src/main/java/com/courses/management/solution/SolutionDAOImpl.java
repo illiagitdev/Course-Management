@@ -1,10 +1,9 @@
 package com.courses.management.solution;
 
-import com.courses.management.common.DatabaseConnector;
-import com.zaxxer.hikari.HikariDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +13,6 @@ import java.util.List;
 
 public class SolutionDAOImpl implements SolutionDao {
     private static final Logger LOG = LogManager.getLogger(SolutionDAOImpl.class);
-    private HikariDataSource dataSource = DatabaseConnector.getConnector();
     private static final String INSERT = "INSERT INTO solution(text, status, mark) VALUES(?, ?, ?);";
     private static final String UPDATE = "UPDATE solution SET text = ?, mark = ? WHERE id = ?;";
     private static final String DELETE = "DELETE FROM solution WHERE id = ?;";
@@ -26,6 +24,11 @@ public class SolutionDAOImpl implements SolutionDao {
             "WHERE home_work_id = ?;";
     private static final String GET_BY_USER_HOMEWORK_ID = "SELECT id, text, status, mark FROM solution " +
             "WHERE user_id = ? & home_work_id = ?;";
+    private DataSource dataSource;
+
+    public SolutionDAOImpl(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     public void create(Solutions solutions) {

@@ -6,7 +6,6 @@ import com.courses.management.common.command.util.Commands;
 import com.courses.management.common.command.util.InputString;
 import com.courses.management.course.Course;
 import com.courses.management.course.CourseDAO;
-import com.courses.management.course.CourseDAOImpl;
 import com.courses.management.course.Courses;
 
 import java.util.List;
@@ -15,9 +14,9 @@ public class ShowCourses implements Command {
     private View view;
     private CourseDAO courseDAO;
 
-    public ShowCourses(View view) {
+    public ShowCourses(View view, CourseDAO dao) {
         this.view = view;
-        this.courseDAO = new CourseDAOImpl();
+        this.courseDAO = dao;
     }
 
     @Override
