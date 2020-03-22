@@ -26,7 +26,6 @@ public class UpdateCourseStatus implements Command {
 
     @Override
     public void process(InputString input) {
-        input.validateParameters(command());
         String title = input.getParameters()[1];
         Course course = courseDAO.get(title);
         if (course == null || course.getTitle() == null) {

@@ -7,6 +7,8 @@ import com.courses.management.course.Course;
 import com.courses.management.course.CourseDAO;
 import com.courses.management.course.CourseDAOImpl;
 
+import java.util.Objects;
+
 public class UpdateCourseTitle implements Command {
     private View view;
     private CourseDAO courseDAO;
@@ -23,10 +25,9 @@ public class UpdateCourseTitle implements Command {
 
     @Override
     public void process(InputString input) {
-        input.validateParameters(command());
         String oldTitle = input.getParameters()[1];
         Course course = courseDAO.get(oldTitle);
-        if (course == null || course.getTitle() == null) {
+        if (Objects.isNull(course)) {
             throw new IllegalArgumentException(String.format("Course with title %s not exists", oldTitle));
         }
         String newTitle = input.getParameters()[2];
@@ -38,7 +39,7 @@ public class UpdateCourseTitle implements Command {
 
     private void validateTitle(String title) {
         Course course = courseDAO.get(title);
-        if (course != null) {
+        if (Objects.nonNull(course)) {
             throw new IllegalArgumentException(String.format("Course with title %s exists", title));
         }
     }
