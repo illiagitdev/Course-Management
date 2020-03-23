@@ -1,6 +1,6 @@
 package com.courses.management.user;
 
-import com.courses.management.course.Course;
+import com.courses.management.common.exceptions.SQLUserException;
 import com.courses.management.solution.SolutionDAOImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,22 +12,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class UserDAOImpl implements UserDAO {
     private static final Logger LOG = LogManager.getLogger(SolutionDAOImpl.class);
-    private static final String INSERT = "INSERT INTO users(first_name, last_name, email, user_role, status, course_id) " +
-            "VALUES(?, ?, ?, ?, ?, ?);";
-    private static final String UPDATE = "UPDATE users SET first_name = ?, last_name = ?, email = ? " +
-            "WHERE id = ?;";
+    private static final String INSERT = "INSERT INTO users(first_name, last_name, email, user_role, status) " +
+            "VALUES(?, ?, ?, ?, ?);";
+    private static final String UPDATE = "UPDATE users SET first_name = ?, last_name = ?, email = ?, user_role = ?, " +
+            "status = ?, course_id = ? WHERE email = ?;";
     private static final String DELETE = "DELETE FROM users WHERE id = ?;";
-    private static final String DELETE_BY_EMAIL = "DELETE FROM users WHERE email = ?;";
-    private static final String GET_BY_ID = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
+    private static final String FIND_USER_BY_ID = "SELECT id, first_name, last_name, email, user_role, status " +
             "FROM users WHERE id = ?;";
+    private static final String FIND_USER_BY_EMAIL = "SELECT id, first_name, last_name, email, user_role, status " +
+            "FROM users WHERE email = ?;";
+    private static final String FIND_ALL_USERS = "SELECT id, first_name, last_name, email, user_role, status FROM users;";
+    private static final String DELETE_BY_EMAIL = "DELETE FROM users WHERE email = ?;";
     private static final String GET_BY_USER_STATUS = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
-            "FROM users WHERE id = ?;";private static final String GET_BY_EMAIL = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
-            "FROM users WHERE status = ?;";
-    private static final String GET_ALL = "SELECT id, first_name, last_name, email, user_role, status, course_id FROM users;";
+            "FROM users WHERE id = ?;";
     private static final String GET_ALL_BY_COURSE_STATUS = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
             "FROM users WHERE status = ? AND course_id = (SELECT id FROM  course WHERE title LIKE ?);";
     private static final String GET_BY_FIRST_LAST_NAMES = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
@@ -40,198 +40,135 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void create(User user) {
-        LOG.debug(String.format("create: user.firstName=%s, .lastName=%s", user.getFirstName(), user.getLastName()));
+        LOG.debug(String.format("create: user.firstName=%s, lastName=%s, email=%s", user.getFirstName(),
+                user.getLastName(), user.getEmail()));
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT)){
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
             statement.setString(3, user.getEmail());
             statement.setString(4, user.getUserRole().getRole());
-            if (user.getCourse() == null) {
-                statement.setInt(6, 0);
-            }else {
-                statement.setInt(6, user.getCourse().getId());
-            }
+            statement.setString(5, user.getStatus().getStatus());
             statement.execute();
         } catch (SQLException e) {
             LOG.error(String.format("Error creating user: %s", user.getFirstName()), e);
+            throw new SQLUserException("Error occurred when creating user");
         }
     }
 
     @Override
     public void update(User user) {
-        LOG.debug(String.format("update: user.id=%d", user.getId()));
+        LOG.debug(String.format("update: user.firstName=%s, lastName=%s, email=%s", user.getFirstName(),
+                user.getLastName(), user.getEmail()));
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE)){
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
             statement.setString(3, user.getEmail());
-            statement.setInt(4, user.getId());
-            int rowAffected = statement.executeUpdate();
-            if (rowAffected == 0 || rowAffected > 1) {
-                LOG.warn(String.format("update: affected rows=%d", rowAffected));
-            }
+            statement.setString(4, user.getUserRole().getRole());
+            statement.setString(5, user.getStatus().getStatus());
+            statement.setInt(6, user.getCourse().getId());
+            statement.setString(7, user.getEmail());
+            statement.execute();
         } catch (SQLException e) {
             LOG.error(String.format("Error creating user: %s", user.getFirstName()), e);
+            throw new SQLUserException("Error occurred when updating user");
         }
-
     }
 
     @Override
     public void delete(int id) {
-        LOG.debug(String.format("delete: users.id=%s", id));
+        LOG.debug(String.format("delete: user_id=%s", id));
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE)){
             statement.setInt(1, id);
-            int index = statement.executeUpdate();
-            if (index == 0 ){
-                LOG.warn(String.format("no user with id=%s found", id));
-            }
+            statement.execute();
         } catch (SQLException e) {
             LOG.error(String.format("Error deleting user with id: %s", id), e);
+            throw new SQLUserException("Error occurred when deleting user");
         }
     }
 
     @Override
     public void deleteByEmail(String email) {
-        LOG.debug(String.format("delete: users.email=%s", email));
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(DELETE_BY_EMAIL)){
-            statement.setString(1, email);
-            int index = statement.executeUpdate();
-            if (index == 0 ){
-                LOG.warn(String.format("no user with email=%s found", email));
-            }
-        } catch (SQLException e) {
-            LOG.error(String.format("Error deleting user with email: %s", email), e);
-        }
     }
 
     @Override
     public User get(int id) {
-        User user = null;
-        LOG.debug(String.format("get(id): user.id=%d", id));
+        LOG.debug(String.format("get: user.id=%d", id));
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(GET_BY_ID)){
+             PreparedStatement statement = connection.prepareStatement(FIND_USER_BY_ID)){
             statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            user = buildUser(resultSet);
+            return getUser(statement.executeQuery());
         } catch (SQLException e) {
-            LOG.error("Error retrieving user.", e);
+            LOG.error(String.format("get: user.id=%d", id), e);
+            throw new SQLUserException("Error occurred when retrieving user");
         }
-        return user;
     }
 
     @Override
     public User get(String email) {
-        User user = null;
-        LOG.debug(String.format("get(id): user.email=%s", email));
+        LOG.debug(String.format("get: user.email =%s", email));
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(GET_BY_EMAIL)){
+             PreparedStatement statement = connection.prepareStatement(FIND_USER_BY_EMAIL)){
             statement.setString(1, email);
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            user = buildUser(resultSet);
+            return getUser(statement.executeQuery());
         } catch (SQLException e) {
-            LOG.error("Error retrieving user.", e);
+            LOG.error(String.format("get: user.email =%s", email), e);
+            throw new SQLUserException("Error occurred when retrieving user");
         }
-        return user;
     }
 
     @Override
     public List<User> getByName(String firstName, String lastName) {
-        List<User> users = null;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(GET_BY_FIRST_LAST_NAMES)){
-            statement.setString(1, firstName);
-            statement.setString(2, lastName);
-            ResultSet resultSet = statement.executeQuery();
-            users = new ArrayList<>();
-            while (resultSet.next()){
-                User user = buildUser(resultSet);
-                users.add(user);
-            }
-        } catch (SQLException e) {
-            LOG.error("Error retrieving users.", e);
-        }
-        return users;
+        return null;
     }
 
     @Override
     public List<User> getByStatus(String status) {
-        List<User> users = null;
-        LOG.debug(String.format("getByStatus(status): user.status=%s", status));
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(GET_BY_USER_STATUS)){
-            statement.setString(1, status);
-            ResultSet resultSet = statement.executeQuery();
-            users = new ArrayList<>();
-            while (resultSet.next()){
-                User user = buildUser(resultSet);
-                users.add(user);
-            }
-        } catch (SQLException e) {
-            LOG.error("Error retrieving user.", e);
-        }
-        return users;
+        return null;
     }
 
     @Override
     public List<User> getAll() {
-        List<User> users = null;
+        LOG.debug("getAll: ");
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(GET_ALL)){
-            ResultSet resultSet = statement.executeQuery();
-            users = new ArrayList<>();
-            while (resultSet.next()){
-                User user = buildUser(resultSet);
-                users.add(user);
-            }
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_USERS)){
+            return getUsersList(statement.executeQuery());
         } catch (SQLException e) {
-            LOG.error("Error retrieving users.", e);
+            LOG.error("getAll:", e);
+            throw new SQLUserException("Error occurred when retrieving list of users");
+        }
+    }
+
+    private List<User> getUsersList(ResultSet rs) throws SQLException {
+        List<User> users = new ArrayList<>();
+        while (rs.next()) {
+            users.add(mapUserFromRS(rs));
         }
         return users;
     }
 
     @Override
     public List<User> getByCourseAndStatus(String courseTitle, String status) {
-        List<User> users = null;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(GET_ALL_BY_COURSE_STATUS)){
-            statement.setString(1 , status);
-            statement.setString(2 , courseTitle);
-            ResultSet resultSet = statement.executeQuery();
-            users = new ArrayList<>();
-            while (resultSet.next()){
-                User user = buildUser(resultSet);
-                users.add(user);
-            }
-        } catch (SQLException e) {
-            LOG.error("Error retrieving users by course id.", e);
-        }
-        return users;
+        return null;
     }
 
-    private User buildUser(ResultSet resultSet) throws SQLException {
+    private User getUser(ResultSet rs) throws SQLException {
+        if (rs.next()) {
+            return mapUserFromRS(rs);
+        }
+        return null;
+    }
+
+    private User mapUserFromRS(ResultSet rs) throws SQLException {
         User user = new User();
-        user.setId(resultSet.getInt("id"));
-        user.setFirstName(resultSet.getString("first_name"));
-        user.setLastName(resultSet.getString("last_name"));
-        user.setEmail(resultSet.getString("email"));
-        Optional<UserRole> someRole = UserRole.getUserRole(resultSet.getString("user_role").toUpperCase());
-        UserRole role = someRole.isEmpty() ? null : someRole.get();
-        user.setUserRole(role);
-        Optional<UserStatus> status = UserStatus.getUserStatus(resultSet.getString("status").toUpperCase());
-        UserStatus userStatus = status.isEmpty() ? null : status.get();
-        user.setStatus(userStatus);
-        int courseId = resultSet.getInt("course_id");
-        /*  call CourseDAOImpl to get course for user*/
-        Course course =  null;
-//        if(courseId > 0) {
-//            course = (new CourseDAOImpl()).get(courseId);
-//        }
-        user.setCourse(course);
+        user.setId(rs.getInt("id"));
+        user.setFirstName(rs.getString("first_name"));
+        user.setLastName(rs.getString("last_name"));
+        user.setEmail(rs.getString("email"));
+        user.setUserRole(UserRole.getUserRole(rs.getString("user_role")).get());
+        user.setStatus(UserStatus.getUserStatus(rs.getString("status")).get());
         return user;
     }
 }
