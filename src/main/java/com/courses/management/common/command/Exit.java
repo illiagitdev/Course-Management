@@ -4,6 +4,7 @@ import com.courses.management.common.Command;
 import com.courses.management.common.View;
 import com.courses.management.common.command.util.Commands;
 import com.courses.management.common.command.util.InputString;
+import com.courses.management.common.exceptions.ExitExeption;
 
 public class Exit implements Command {
     private View view;
@@ -20,6 +21,6 @@ public class Exit implements Command {
     @Override
     public void process(InputString input) {
         view.write("Exit application");
-        System.exit(0);
+        throw new ExitExeption("Exit");
     }
 }

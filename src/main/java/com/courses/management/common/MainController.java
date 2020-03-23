@@ -3,6 +3,7 @@ package com.courses.management.common;
 import com.courses.management.common.command.Exit;
 import com.courses.management.common.command.Help;
 import com.courses.management.common.command.util.InputString;
+import com.courses.management.common.exceptions.ExitExeption;
 import com.courses.management.course.CourseDAOImpl;
 import com.courses.management.course.command.*;
 import com.courses.management.user.UserDAOImpl;
@@ -46,27 +47,32 @@ public class MainController {
 
     public void read(){
         view.write("Welcome!");
-        while (true){
-            view.write("Enter command or 'help' for details!");
-            String read = view.read();
-            doCommand(read);
+        view.write("Enter command or use 'help' to list all available commands!");
+        try {
+            doCommand();
+        } catch (ExitExeption e) {
+            /*NOP*/
         }
     }
 
-    private void doCommand(String input) {
-        LOG.debug(String.format("doCommand: input=%s", input));
-        InputString entry = new InputString(input);
-        for (Command command: commands){
-            try {
-                if (command.canProcess(entry)){
-                    entry.validateParameters(command.command());
-                    command.process(entry);
+    private void doCommand() {
+        while (true) {
+            InputString entry = new InputString(view.read());
+            for (Command command : commands) {
+                try {
+                    if (command.canProcess(entry)) {
+                        entry.validateParameters(command.command());
+                        command.process(entry);
+                        break;
+                    }
+                } catch (Exception e) {
+                    if (e instanceof ExitExeption){
+                        throw e;
+                    }
+                    LOG.warn(String.format("doCommand: WARN %s", e.getMessage()));
+                    printError(e);
                     break;
                 }
-            } catch (Exception e) {
-                LOG.warn(String.format("doCommand: WARN %s", e.getMessage()));
-                printError(e);
-                break;
             }
         }
     }
