@@ -55,12 +55,32 @@ public class Help implements Command {
         view.write("");
 
         view.write(String.format("\t| %s", CREATE_USER));
-        view.write("\t|\t-> create user, user role will be set as " + collectUserRole());
-        view.write("\t|\t-> and user status as" + collectUserStatus());
+        view.write("\t|\t-> create user, user role will be set as " + UserRole.NEWCOMER);
+        view.write("\t|\t-> and user status as" + UserStatus.NOT_ACTIVE);
         view.write("");
 
         view.write(String.format("\t| %s", FIND_USER));
         view.write("\t|\t-> find user by email");
+        view.write("");
+
+        view.write(String.format("\t| %s", DELETE_USER_COURSE));
+        view.write("\t|\t-> delete user course and set user to NOT_ACTIVE status");
+        view.write("");
+
+        view.write(String.format("\t| %s", FIND_ALL_USERS_BY_COURSE));
+        view.write("\t|\t-> get all user by specified course");
+        view.write("");
+
+        view.write(String.format("\t| %s", FIND_ALL_USERS_BY_STATUS));
+        view.write("\t|\t-> get all users by specified status [" + collectUsersStatuses() + "]");
+        view.write("");
+
+        view.write(String.format("\t| %s", UPDATE_USER_COURSE));
+        view.write("\t|\t-> update users course by specified course title");
+        view.write("");
+
+        view.write(String.format("\t| %s", UPDATE_USER_EMAIL));
+        view.write("\t|\t-> update users email");
         view.write("");
 
         view.write(String.format("\t| %s", EXIT));
@@ -68,14 +88,9 @@ public class Help implements Command {
         view.write(divide);
     }
 
-    private String collectUserStatus() {
+    private String collectUsersStatuses() {
         return Arrays.stream(UserStatus.values()).
                 map(UserStatus::getStatus).collect(Collectors.joining(", "));
-    }
-
-    private String collectUserRole() {
-        return Arrays.stream(UserRole.values()).
-                map(UserRole::getRole).collect(Collectors.joining(", "));
     }
 
     private String collectCourseStatus() {

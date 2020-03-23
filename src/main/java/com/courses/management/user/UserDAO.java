@@ -6,8 +6,7 @@ import java.util.List;
 
 public interface UserDAO extends DataAccessObject<User> {
     User get(String email);
-    List<User> getByName(String firstName, String lastName);
-    List<User> getByStatus(String status);
-    List<User> getByCourseAndStatus(String courseTitle, String status);
-    void deleteByEmail(String email);
+    void removeUserCourseAndSetStatus (String email, UserStatus status);
+    List<User> getUsersByCourse (String courseTitle);
+    List<User> getAllByStatus (UserStatus status);
 }

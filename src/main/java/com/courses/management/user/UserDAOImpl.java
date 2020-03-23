@@ -18,20 +18,21 @@ public class UserDAOImpl implements UserDAO {
     private static final String INSERT = "INSERT INTO users(first_name, last_name, email, user_role, status) " +
             "VALUES(?, ?, ?, ?, ?);";
     private static final String UPDATE = "UPDATE users SET first_name = ?, last_name = ?, email = ?, user_role = ?, " +
-            "status = ?, course_id = ? WHERE email = ?;";
+            "status = ? WHERE id = ?;";
     private static final String DELETE = "DELETE FROM users WHERE id = ?;";
     private static final String FIND_USER_BY_ID = "SELECT id, first_name, last_name, email, user_role, status " +
             "FROM users WHERE id = ?;";
     private static final String FIND_USER_BY_EMAIL = "SELECT id, first_name, last_name, email, user_role, status " +
             "FROM users WHERE email = ?;";
     private static final String FIND_ALL_USERS = "SELECT id, first_name, last_name, email, user_role, status FROM users;";
-    private static final String DELETE_BY_EMAIL = "DELETE FROM users WHERE email = ?;";
-    private static final String GET_BY_USER_STATUS = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
-            "FROM users WHERE id = ?;";
-    private static final String GET_ALL_BY_COURSE_STATUS = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
-            "FROM users WHERE status = ? AND course_id = (SELECT id FROM  course WHERE title LIKE ?);";
-    private static final String GET_BY_FIRST_LAST_NAMES = "SELECT id, first_name, last_name, email, user_role, status, course_id " +
-            "FROM users WHERE first_name = ? AND last_name = ?;";
+    private static final String UPDATE_REMOVE_COURSE_AND_SET_STATUS = "UPDATE users SET course_id = NULL, status = ? " +
+            "WHERE email = ?;";
+    private static final String FIND_USERS_BY_COURSE_TITLE = "SELECT u.id, u.first_name, u.last_name, u.email, u.user_role," +
+            "u.status FROM users u " +
+            "INNER JOIN course c ON u.course_id = c.id " +
+            "WHERE c.title = ?;";
+    private static final String FIND_ALL_USERS_BY_STATUS = "SELECT id, first_name, last_name, email, user_role, status " +
+            "FROM users WHERE status = ?;";
     private DataSource dataSource;
 
     public UserDAOImpl(DataSource dataSource) {
@@ -67,8 +68,7 @@ public class UserDAOImpl implements UserDAO {
             statement.setString(3, user.getEmail());
             statement.setString(4, user.getUserRole().getRole());
             statement.setString(5, user.getStatus().getStatus());
-            statement.setInt(6, user.getCourse().getId());
-            statement.setString(7, user.getEmail());
+            statement.setInt(6, user.getId());
             statement.execute();
         } catch (SQLException e) {
             LOG.error(String.format("Error creating user: %s", user.getFirstName()), e);
@@ -87,10 +87,6 @@ public class UserDAOImpl implements UserDAO {
             LOG.error(String.format("Error deleting user with id: %s", id), e);
             throw new SQLUserException("Error occurred when deleting user");
         }
-    }
-
-    @Override
-    public void deleteByEmail(String email) {
     }
 
     @Override
@@ -120,13 +116,43 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> getByName(String firstName, String lastName) {
-        return null;
+    public void removeUserCourseAndSetStatus(String email, UserStatus status) {
+        LOG.debug(String.format("removeUserCourseAndSetStatus: user.email =%s", email));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_REMOVE_COURSE_AND_SET_STATUS)){
+            statement.setString(1, status.name());
+            statement.setString(2, email);
+            statement.execute();
+        } catch (SQLException e) {
+            LOG.error(String.format("removeUserCourseAndSetStatus: user.email =%s", email), e);
+            throw new SQLUserException("Error occurred when removing course from a user");
+        }
     }
 
     @Override
-    public List<User> getByStatus(String status) {
-        return null;
+    public List<User> getUsersByCourse(String courseTitle) {
+        LOG.debug(String.format("getUsersByCourse: course.title=%s", courseTitle));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_USERS_BY_COURSE_TITLE)){
+            statement.setString(1, courseTitle);
+            return getUsersList(statement.executeQuery());
+        } catch (SQLException e) {
+            LOG.error(String.format("getUsersByCourse: course.title=%s", courseTitle), e);
+            throw new SQLUserException("Error occurred when retrieving users by course title");
+        }
+    }
+
+    @Override
+    public List<User> getAllByStatus(UserStatus status) {
+        LOG.debug(String.format("getAllByStatus: course.status=%s", status.name()));
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_USERS_BY_STATUS)){
+            statement.setString(1, status.name());
+            return getUsersList(statement.executeQuery());
+        } catch (SQLException e) {
+            LOG.error(String.format("getAllByStatus: course.status=%s", status.name()), e);
+            throw new SQLUserException("Error occurred when retrieving users by status");
+        }
     }
 
     @Override
@@ -147,11 +173,6 @@ public class UserDAOImpl implements UserDAO {
             users.add(mapUserFromRS(rs));
         }
         return users;
-    }
-
-    @Override
-    public List<User> getByCourseAndStatus(String courseTitle, String status) {
-        return null;
     }
 
     private User getUser(ResultSet rs) throws SQLException {
