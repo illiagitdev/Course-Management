@@ -62,12 +62,11 @@ public class Course extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return title.equals(course.title) &&
-                status == course.status;
+        return title.equals(course.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, status);
+        return Objects.hash(title);
     }
 }
