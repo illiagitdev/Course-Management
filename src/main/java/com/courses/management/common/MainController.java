@@ -7,6 +7,7 @@ import com.courses.management.course.CourseDAOImpl;
 import com.courses.management.course.command.*;
 import com.courses.management.user.UserDAOImpl;
 import com.courses.management.user.command.CreateUser;
+import com.courses.management.user.command.FindUser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,16 +22,19 @@ public class MainController {
 
     public MainController(View view, DataSource dataSource) {
         this.view = view;
+        final CourseDAOImpl courseDAO = new CourseDAOImpl(dataSource);
+        final UserDAOImpl userDAO = new UserDAOImpl(dataSource);
         this.commands = Arrays.asList(
                 new Help(view),
 
-                new CreateCourse(view, new CourseDAOImpl(dataSource)),
-                new FindCourse(view, new CourseDAOImpl(dataSource)),
-                new UpdateCourseTitle(view, new CourseDAOImpl(dataSource)),
-                new UpdateCourseStatus(view, new CourseDAOImpl(dataSource)),
-                new ShowCourses(view, new CourseDAOImpl(dataSource)),
-                new DeleteCourse(view, new CourseDAOImpl(dataSource)),
-                new CreateUser(view, new UserDAOImpl(dataSource)),
+                new CreateCourse(view, courseDAO),
+                new FindCourse(view, courseDAO),
+                new UpdateCourseTitle(view, courseDAO),
+                new UpdateCourseStatus(view, courseDAO),
+                new ShowCourses(view, courseDAO),
+                new DeleteCourse(view, courseDAO),
+                new CreateUser(view, userDAO),
+                new FindUser(view, userDAO),
 
                 new Exit(view)
         );
