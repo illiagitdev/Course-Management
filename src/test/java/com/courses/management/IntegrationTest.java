@@ -31,7 +31,7 @@ public class IntegrationTest {
     }
 
     @After
-    public void tearDown() throws SQLException {
+    public void tearDown() {
         clearDatabase();
     }
 
@@ -241,7 +241,168 @@ public class IntegrationTest {
                 "Exit application\n", getData());
     }
 
+    @Test
+    public void testCreateUserWithCorrectInputParameters () {
+        //given
+        in.add("create_user|Fancy|Name|fancy.name@email.org");
+        in.add("find_user|fancy.name@email.org");
+        in.add("exit");
 
+        //when
+        mainController.read();
+
+        //then
+        assertEquals("Welcome!\n" +
+                "Enter command or use 'help' to list all available commands!\n" +
+                "User Fancy Name created.\n" +
+                "User:\n" +
+                "\t first name = Fancy\n" +
+                "\t last name = Name\n" +
+                "\t email = fancy.name@email.org\n" +
+                "\t user role = NEWCOMER\n" +
+                "\t user status = NOT_ACTIVE\n" +
+                "Exit application\n", getData());
+    }
+
+    @Test
+    public void testFindUsersByStatusWithCorrectInputParameters () {
+        //given
+        in.add("create_user|Fancy1|Name1|fancy1.name1@email.org");
+        in.add("create_user|Fancy2|Name2|fancy2.name2@email.org");
+        in.add("find_all_users_by_user_status|NOT_ACTIVE");
+        in.add("exit");
+
+        //when
+        mainController.read();
+
+        //then
+        assertEquals("Welcome!\n" +
+                "Enter command or use 'help' to list all available commands!\n" +
+                "User Fancy1 Name1 created.\n" +
+                "User Fancy2 Name2 created.\n" +
+                "User:\n" +
+                "\t first name = Fancy1\n" +
+                "\t last name = Name1\n" +
+                "\t email = fancy1.name1@email.org\n" +
+                "\t user role = NEWCOMER\n" +
+                "\t user status = NOT_ACTIVE\n" +
+                "User:\n" +
+                "\t first name = Fancy2\n" +
+                "\t last name = Name2\n" +
+                "\t email = fancy2.name2@email.org\n" +
+                "\t user role = NEWCOMER\n" +
+                "\t user status = NOT_ACTIVE\n" +
+                "Exit application\n", getData());
+    }
+
+    @Test
+    public void testUpdateUserEmailWithCorrectParameters () {
+        //given
+        in.add("create_user|Fancy|Name|fancy.name@email.org");
+        in.add("update_user_email|fancy.name@email.org|new.fancy.name@email.org");
+        in.add("find_user|new.fancy.name@email.org");
+        in.add("exit");
+
+        //when
+        mainController.read();
+
+        //then
+        assertEquals("Welcome!\n" +
+                "Enter command or use 'help' to list all available commands!\n" +
+                "User Fancy Name created.\n" +
+                "User updated successfully\n" +
+                "User:\n" +
+                "\t first name = Fancy\n" +
+                "\t last name = Name\n" +
+                "\t email = new.fancy.name@email.org\n" +
+                "\t user role = NEWCOMER\n" +
+                "\t user status = NOT_ACTIVE\n" +
+                "Exit application\n", getData());
+    }
+
+    @Test
+    public void testDeleteUserCourse () {
+       //given
+        in.add("create_user|Fancy|Name|fancy.name@email.org");
+        in.add("delete_user_course|fancy.name@email.org");
+        in.add("find_user|new.fancy.name@email.org");
+        in.add("exit");
+
+        //when
+        mainController.read();
+
+        //then
+        assertEquals("Welcome!\n" +
+                "Enter command or use 'help' to list all available commands!\n" +
+                "User Fancy Name created.\n" +
+                "User course removed and status set to NOT_ACTIVE\n" +
+                "Error because of Can't find user with provided email\n" +
+                "Please try again.\n" +
+                "Exit application\n", getData());
+    }
+
+    @Test
+    public void testUpdateUserCourseWithCorrectParameters () {
+        //given
+        in.add("create_user|Fancy|Name|fancy.name@email.org");
+        in.add("create_course|Java-test");
+        in.add("update_user_course|fancy.name@email.org|Java-test");//not executed
+        in.add("find_user|fancy.name@email.org");
+        in.add("exit");
+
+        //when
+        mainController.read();
+
+        //then
+        assertEquals("Welcome!\n" +
+                "Enter command or use 'help' to list all available commands!\n" +
+                "User Fancy Name created.\n" +
+                "Course created with title: Java-test\n" +
+                "User successfully updated\n" +
+                "User:\n" +
+                "\t first name = Fancy\n" +
+                "\t last name = Name\n" +
+                "\t email = fancy.name@email.org\n" +
+                "\t user role = NEWCOMER\n" +
+                "\t user status = ACTIVE\n" +
+                "Exit application\n", getData());
+    }
+    @Test
+    public void testFindAllUsersByCourseWithCorrectParameters () {
+        //given
+        in.add("create_course|Java-test");
+        in.add("create_user|Fancy1|Name1|fancy1.name1@email.org");
+        in.add("update_user_course|fancy1.name1@email.org|Java-test");//not executed
+        in.add("create_user|Fancy2|Name2|fancy2.name2@email.org");
+        in.add("update_user_course|fancy2.name2@email.org|Java-test");//not executed
+        in.add("find_all_users_by_course_title|Java-test");
+        in.add("exit");
+
+        //when
+        mainController.read();
+
+        //then
+        assertEquals("Welcome!\n" +
+                "Enter command or use 'help' to list all available commands!\n" +
+                "Course created with title: Java-test\n" +
+                "User Fancy1 Name1 created.\n" +
+                "User successfully updated\n" +
+                "User Fancy2 Name2 created.\n" +
+                "User successfully updated\n" +
+                "User:\n" +
+                "\t first name = Fancy1\n" +
+                "\t last name = Name1\n" +
+                "\t email = fancy1.name1@email.org\n" +
+                "\t user role = NEWCOMER\n" +
+                "\t user status = ACTIVE\n" +
+                "User:\n" +
+                "\t first name = Fancy2\n" +
+                "\t last name = Name2\n" +
+                "\t email = fancy2.name2@email.org\n" +
+                "\t user role = NEWCOMER\n" +
+                "\t user status = ACTIVE\n" +
+                "Exit application\n", getData());
+    }
 
     private String getData() {
         try {
@@ -253,7 +414,7 @@ public class IntegrationTest {
         }
     }
 
-    private void clearDatabase() throws SQLException {
+    private void clearDatabase(){
         try (Connection connection = dbConnector.getDataSource().getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute("DROP ALL OBJECTS;");
