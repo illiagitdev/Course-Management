@@ -38,7 +38,7 @@ public class MainController {
                 new DeleteUserCourse(view, userDAO),
                 new FindAllUsersByCourse(view, userDAO),
                 new FindUsersByStatus(view, userDAO),
-                new UpdateUserCourse(view, userDAO),
+                new UpdateUserCourse(view, userDAO, courseDAO),
                 new UpdateUserEmail(view, userDAO),
 
                 new Exit(view)

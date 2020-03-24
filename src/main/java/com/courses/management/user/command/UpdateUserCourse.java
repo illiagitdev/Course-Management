@@ -19,9 +19,10 @@ public class UpdateUserCourse implements Command {
     private static final int COURSE_TITLE_INDEX = 2;
     private CourseDAO courseDAO;
 
-    public UpdateUserCourse(View view, UserDAO dao) {
+    public UpdateUserCourse(View view, UserDAO dao, CourseDAO courseDAO) {
         this.view = view;
         this.userDAO = dao;
+        this.courseDAO = courseDAO;
     }
 
     @Override
