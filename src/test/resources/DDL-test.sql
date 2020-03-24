@@ -1,5 +1,5 @@
 --SCHEMA
-create table course 
+create table if not exists course
 	(
 	id serial,
 	title VARCHAR(50),
@@ -7,7 +7,7 @@ create table course
 	PRIMARY KEY (id)
 	);
 
-create table users
+create table if not exists users
 	(
 	id serial,
 	first_name VARCHAR(50),
@@ -21,7 +21,7 @@ create table users
 		REFERENCES course (id)
 	);
 
-create table home_work 
+create table if not exists home_work
 	(
 	id serial,
 	title VARCHAR(50),
@@ -33,7 +33,7 @@ create table home_work
 		REFERENCES course (id)
 	);
 
-create table solution 
+create table if not exists solution
 	(
 	id serial,
 	text text,
