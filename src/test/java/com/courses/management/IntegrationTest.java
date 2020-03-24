@@ -116,6 +116,133 @@ public class IntegrationTest {
                 "Exit application\n", getData());
     }
 
+    @Test
+    public void testDeleteNotExistedCourseWithCorrectInputParameters () {
+        //given
+        in.add("delete_course|Title_Java");
+        in.add("find_course|Title_Java");
+        in.add("exit");
+
+        //when
+        mainController.read();
+
+        //then
+        assertEquals("Welcome!\n" +
+                "Enter command or use 'help' to list all available commands!\n" +
+                "Error because of Course with title Title_Java not exists\n" +
+                "Please try again.\n" +
+                "Error because of Can't find course with provided title.\n" +
+                "Please try again.\n" +
+                "Exit application\n", getData());
+    }
+    @Test
+
+    public void testDeleteExistingCourseWithCorrectInputParameters () {
+        //given
+        in.add("create_course|Title_Java");
+        in.add("delete_course|Title_Java");
+        in.add("find_course|Title_Java");
+        in.add("exit");
+
+        //when
+        mainController.read();
+
+        //then
+        assertEquals("Welcome!\n" +
+                "Enter command or use 'help' to list all available commands!\n" +
+                "Course created with title: Title_Java\n" +
+                "Course status updated.\n" +
+                "Course\n" +
+                "\t title = Title_Java\n" +
+                "\t status = DELETED\n" +
+                "Exit application\n", getData());
+    }
+
+    @Test
+    public void testShowCoursesWithEmptyDB () {
+        //given
+        in.add("show_courses");
+        in.add("exit");
+
+        //when
+        mainController.read();
+
+        //then
+        assertEquals("Welcome!\n" +
+                "Enter command or use 'help' to list all available commands!\n" +
+                "Exit application\n", getData());
+    }
+    @Test
+    public void testShowCoursesWithExistingCourses () {
+        //given
+        in.add("create_course|Java-1");
+        in.add("create_course|Java-2");
+        in.add("show_courses");
+        in.add("exit");
+
+        //when
+        mainController.read();
+
+        //then
+        assertEquals("Welcome!\n" +
+                "Enter command or use 'help' to list all available commands!\n" +
+                "Course created with title: Java-1\n" +
+                "Course created with title: Java-2\n" +
+                "Course\n" +
+                "\t title = Java-1\n" +
+                "\t status = NOT_STARTED\n" +
+                "Course\n" +
+                "\t title = Java-2\n" +
+                "\t status = NOT_STARTED\n" +
+                "Exit application\n", getData());
+    }
+
+    @Test
+    public void testUpdateCourseStatusWithCorrectParameters () {
+        //given
+        in.add("create_course|Java-test");
+        in.add("update_course_status|Java-test|FINISHED");
+        in.add("find_course|Java-test");
+        in.add("exit");
+
+        //when
+        mainController.read();
+
+        //then
+        assertEquals("Welcome!\n" +
+                "Enter command or use 'help' to list all available commands!\n" +
+                "Course created with title: Java-test\n" +
+                "Course status updated.\n" +
+                "Course\n" +
+                "\t title = Java-test\n" +
+                "\t status = FINISHED\n" +
+                "Exit application\n", getData());
+    }
+
+    @Test
+    public void testUpdateCourseTitleWithCorrectParameters () {
+        //given
+        in.add("create_course|Java-oldTitle");
+        in.add("update_course_title|Java-oldTitle|Java-newTitle");
+        in.add("find_course|Java-newTitle");
+        in.add("exit");
+
+        //when
+        mainController.read();
+
+        //then
+        assertEquals("Welcome!\n" +
+                "Enter command or use 'help' to list all available commands!\n" +
+                "Course created with title: Java-oldTitle\n" +
+                "Course title updated.\n" +
+                "Course\n" +
+                "\t title = Java-newTitle\n" +
+                "\t status = NOT_STARTED\n" +
+                "Exit application\n", getData());
+    }
+
+
+
     private String getData() {
         try {
             String result = new String(out.toByteArray(), "UTF-8").replaceAll("\r\n", "\n");
@@ -129,7 +256,9 @@ public class IntegrationTest {
     private void clearDatabase() throws SQLException {
         try (Connection connection = dbConnector.getDataSource().getConnection();
              Statement statement = connection.createStatement()) {
-
+            statement.execute("DROP ALL OBJECTS;");
+        } catch (Exception e) {
+            e.getStackTrace();
         }
     }
 }
