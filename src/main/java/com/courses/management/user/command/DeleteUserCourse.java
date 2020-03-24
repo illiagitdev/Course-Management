@@ -34,8 +34,9 @@ public class DeleteUserCourse implements Command {
         if (Objects.isNull(user)) {
             throw new IllegalArgumentException("Can't find user with provided email");
         }
-
-        dao.removeUserCourseAndSetStatus(email, UserStatus.NOT_ACTIVE);
+        user.setCourse(null);
+        user.setStatus(UserStatus.NOT_ACTIVE);
+        dao.update(user);
         view.write(String.format("User course removed and status set to %s", UserStatus.NOT_ACTIVE.getStatus()));
     }
 }
