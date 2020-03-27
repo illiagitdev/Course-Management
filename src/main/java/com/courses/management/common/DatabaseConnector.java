@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.DriverManager;
 import java.util.Properties;
 
 public class DatabaseConnector {
@@ -21,8 +22,14 @@ public class DatabaseConnector {
         try (InputStream resourceAsStream = classLoader.getResourceAsStream("application.properties")){
             properties.load(resourceAsStream);
         } catch (IOException e) {
-            LOG.error("error loading application properties", e);
-            throw new RuntimeException(e);
+            LOG.error("Error loading application properties", e);
+            throw new RuntimeException("Error loading application properties", e);
+        }
+        try {
+            Class.forName(properties.getProperty("jdbc.driver"));
+        } catch (ClassNotFoundException ex) {
+            LOG.error("Error loading postgres driver", ex);
+            throw new RuntimeException("Error loading postgres driver", ex);
         }
         config.setJdbcUrl(properties.getProperty("jdbc.url"));
         config.setUsername(properties.getProperty("jdbc.username"));
