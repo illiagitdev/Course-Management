@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Course extends BaseEntity {
     private String title;
     private List<User> users;
-    private CourseStatus status;
+    private CourseStatus courseStatus;
     private Calendar calendar;
     private List<Homework> homework;
 
@@ -34,11 +34,11 @@ public class Course extends BaseEntity {
     }
 
     public CourseStatus getCourseStatus() {
-        return status;
+        return courseStatus;
     }
 
     public void setCourseStatus(CourseStatus status) {
-        this.status = status;
+        this.courseStatus = status;
     }
 
     public Calendar getCalendar() {
