@@ -9,7 +9,6 @@
 </head>
 <body>
 <c:import url="/view/navig-bar.jsp"/>
-
 <table class="zui-table">
     <thead>
     <tr>
@@ -39,6 +38,5 @@
         </tr>
     </tbody>
 </table>
-
 </body>
 </html>

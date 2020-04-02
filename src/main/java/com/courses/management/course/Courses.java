@@ -4,10 +4,15 @@ import com.courses.management.common.View;
 import com.courses.management.common.command.util.InputString;
 import com.courses.management.user.User;
 import com.courses.management.user.UserDAO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 public class Courses {
+    private static final Logger LOG = LogManager.getLogger(Courses.class);
     private CourseDAO courseDAO;
     private UserDAO userDAO;
 
@@ -39,6 +44,17 @@ public class Courses {
         final Course course = courseDAO.get(id);
         final List<User> users = userDAO.getUsersByCourse(course.getTitle());
         course.setUsers(users);
+        return course;
+    }
+
+    public Course createCourse(HttpServletRequest req) {
+        final String title = req.getParameter("title");
+        final String course_status = req.getParameter("course_status");
+        final Optional<CourseStatus> courseStatus = CourseStatus.getCourseStatusValue(course_status);
+        Course course = new Course();
+        course.setTitle(title);
+        course.setCourseStatus(courseStatus.get());
+        courseDAO.create(course);
         return course;
     }
 }
