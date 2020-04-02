@@ -6,8 +6,10 @@ import com.courses.management.common.MainController;
 import com.courses.management.common.View;
 
 public class Main {
+    private static final String APPLICATION_PROPERTIES_FILENAME = "application.properties";
     public static void main(String[] args) {
         View view = new Console();
+        DatabaseConnector.init(APPLICATION_PROPERTIES_FILENAME);
         MainController controller = new MainController(view, DatabaseConnector.getDataSource());
         controller.read();
     }
