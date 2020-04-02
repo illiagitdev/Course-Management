@@ -17,8 +17,7 @@ public class CourseServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        DatabaseConnector databaseConnector = new DatabaseConnector();
-        servise = new Courses(databaseConnector.getDataSource());
+        servise = new Courses(new CourseDAOImpl(DatabaseConnector.getDataSource()));
     }
 
     @Override

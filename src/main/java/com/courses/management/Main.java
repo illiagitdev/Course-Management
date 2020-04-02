@@ -8,8 +8,7 @@ import com.courses.management.common.View;
 public class Main {
     public static void main(String[] args) {
         View view = new Console();
-        DatabaseConnector dbConnector = new DatabaseConnector();
-        MainController controller = new MainController(view, dbConnector.getDataSource());
+        MainController controller = new MainController(view, DatabaseConnector.getDataSource());
         controller.read();
     }
 }

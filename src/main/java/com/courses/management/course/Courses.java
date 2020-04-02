@@ -3,14 +3,13 @@ package com.courses.management.course;
 import com.courses.management.common.View;
 import com.courses.management.common.command.util.InputString;
 
-import javax.sql.DataSource;
 import java.util.List;
 
 public class Courses {
     private CourseDAO courseDAO;
 
-    public Courses(DataSource dataSource) {
-        courseDAO = new CourseDAOImpl(dataSource);
+    public Courses(CourseDAO courseDAO) {
+        this.courseDAO = courseDAO;
     }
 
     public static Course mapCourse(InputString input) {
