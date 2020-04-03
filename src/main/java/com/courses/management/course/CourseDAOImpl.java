@@ -3,6 +3,9 @@ package com.courses.management.course;
 import com.courses.management.common.exceptions.SQLCourseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -19,15 +22,12 @@ public class CourseDAOImpl implements CourseDAO {
     private static final String UPDATE_COURSE = "UPDATE course SET title = ?, status = ? WHERE id = ?;";
     private static final String FIND_COURSE_BY_ID = "SELECT id, title, status FROM course WHERE id = ?;";
     private static final String FIND_ALL_COURSES = "SELECT id, title, status FROM course;";
-    private static final String GET_ALL_STATUS = "SELECT id, title, status FROM course WHERE status = ?;";
-    private static final String UPDATE_TITLE = "UPDATE course SET title = ? WHERE id = ?;";
-    private static final String UPDATE_STATUS = "UPDATE course SET status = ? WHERE id = ?;";
-    private static final String DELETE = "DELETE FROM course WHERE id = ?;";
-    private static final String DELETE_TITLE = "DELETE FROM course WHERE title = ?;";
     private DataSource dataSource;
+    private SessionFactory sessionFactory;
 
-    public CourseDAOImpl(DataSource dataSource) {
+    public CourseDAOImpl(DataSource dataSource, SessionFactory sessionFactory) {
         this.dataSource = dataSource;
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
@@ -48,21 +48,6 @@ public class CourseDAOImpl implements CourseDAO {
     public void delete(int id) {
         throw new UnsupportedOperationException("Course can't be deleted.");
     }
-
-//    @Override
-//    public void delete(String title) {
-//        LOG.debug(String.format("delete: course.title=%s", title));
-//        try (Connection connection = dataSource.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(DELETE_TITLE)){
-//            statement.setString(1, title);
-//            int index = statement.executeUpdate();
-//            if (index == 0 ){
-//                LOG.warn(String.format("no course with title=%s found", title));
-//            }
-//        } catch (SQLException e) {
-//            LOG.error(String.format("Error deleting course with title: %s", title), e);
-//        }
-//    }
 
     @Override
     public Course get(int id) {
@@ -90,38 +75,27 @@ public class CourseDAOImpl implements CourseDAO {
         }
     }
 
-
-    //    @Override
-//    public List<Course> getAll(String status) {
-//        LOG.debug(String.format("getAll: status=%s", status));
-//        List<Course> courses = null;
-//        try (Connection connection = dataSource.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(GET_ALL_STATUS)){
-//            statement.setString(1, status);
-//            ResultSet resultSet = statement.executeQuery();
-//            courses = new ArrayList<>();
-//            while (resultSet.next()){
-//                Course course = buildCourse(resultSet);
-//                courses.add(course);
-//            }
-//        } catch (SQLException e) {
-//            LOG.error("Error retrieving courses.", e);
-//        }
-//        return courses;
-//    }
-
     @Override
     public Course get(String title) {
-        LOG.debug(String.format("debug:get: course.title=%s", title));
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_COURSE_BY_TITLE)) {
-            statement.setString(1, title);
-            ResultSet resultSet = statement.executeQuery();
-            return getCourse(resultSet);
-        } catch (SQLException e) {
+        Session session = null;
+        Transaction transaction = null;
+        Course course = null;
+
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            course = (Course) session.createQuery("from Course c where c.title=:title")
+                    .setParameter("title", title).getSingleResult();
+            transaction.commit();
+        } catch (Exception e) {
             LOG.error(String.format("error:get: course.title=%s", title), e);
             throw new SQLCourseException("Error occurred when find a course.");
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
+        return course;
     }
 
     @Override
@@ -139,33 +113,6 @@ public class CourseDAOImpl implements CourseDAO {
             throw new SQLCourseException("Error occurred when update a course.");
         }
     }
-
-
-//    @Override
-//    public void updateTitle(Course course) {
-//        LOG.debug(String.format("Update: course.title=%s", course.getTitle()));
-//        try (Connection connection = dataSource.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(UPDATE_TITLE)){
-//            statement.setString(1, course.getTitle());
-//            statement.setInt(2, course.getId());
-//            statement.execute();
-//        } catch (SQLException e) {
-//            LOG.error(String.format("Error updating course with title: %s", course.getTitle()), e);
-//        }
-//    }
-//
-//    @Override
-//    public void updateStatus(Course course) {
-//        LOG.debug(String.format("Update: course.status=%s", course.getCourseStatus()));
-//        try (Connection connection = dataSource.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(UPDATE_STATUS)){
-//            statement.setString(1, course.getCourseStatus().getCourseStatus());
-//            statement.setInt(2, course.getId());
-//            statement.execute();
-//        } catch (SQLException e) {
-//            LOG.error(String.format("Error updating course with status: %s", course.getCourseStatus()), e);
-//        }
-//    }
 
     private List<Course> getCourseList(ResultSet rs) throws SQLException {
         List<Course> courses = new ArrayList<>();

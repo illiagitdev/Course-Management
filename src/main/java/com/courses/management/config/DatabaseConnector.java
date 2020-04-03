@@ -1,4 +1,4 @@
-package com.courses.management.common;
+package com.courses.management.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

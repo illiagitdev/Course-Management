@@ -1,6 +1,7 @@
 package com.courses.management;
 
 import com.courses.management.common.*;
+import com.courses.management.config.HibernateDatabaseConnector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +10,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.Statement;
 
 import static junit.framework.TestCase.assertEquals;
@@ -23,7 +23,7 @@ public class IntegrationTest {
     @Before
     public void setup() {
         this.dbConnector = new DatabaseConnectorTest();
-        this.mainController = new MainController(new Console(), dbConnector.getDataSource());
+        this.mainController = new MainController(new Console(), dbConnector.getDataSource(), HibernateDatabaseConnector.getSessionFactory());
         this.in = new CustomImputStream();
         this.out = new ByteArrayOutputStream();
         System.setIn(in);

@@ -1,5 +1,6 @@
 package com.courses.management.common;
 
+import com.courses.management.config.DatabaseConnector;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.logging.log4j.LogManager;
