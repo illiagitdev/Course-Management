@@ -36,9 +36,9 @@
     </table>
     <button type="submit" class="button">Create</button>
 </form>
-<c:if test="${not empty errorMassage}">
-    <c:forEach items="${errorMessage.errors}" var="error">
-        <p style="color: red">${error}</p>
+<c:if test="${not empty errors}">
+    <c:forEach items="${errors}" var="error">
+        <p style="color: red">${error.field} ${error.error}</p>
     </c:forEach>
 </c:if>
 </body>
