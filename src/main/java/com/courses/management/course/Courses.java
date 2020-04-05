@@ -52,13 +52,7 @@ public class Courses {
         return courseDAO.get(title);
     }
 
-    public Course createCourse(HttpServletRequest req) {
-        final String title = req.getParameter("title");
-        final String course_status = req.getParameter("course_status");
-        final Optional<CourseStatus> courseStatus = CourseStatus.getCourseStatusValue(course_status);
-        Course course = new Course();
-        course.setTitle(title);
-        course.setCourseStatus(courseStatus.get());
+    public Course createCourse(Course course) {
         courseDAO.create(course);
         return course;
     }

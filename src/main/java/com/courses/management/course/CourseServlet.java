@@ -59,6 +59,7 @@ public class CourseServlet extends HttpServlet {
                 req.getRequestDispatcher("/view/create_course.jsp").forward(req, resp);
             }
 
+            servise.createCourse(course);
             req.setAttribute("course_title", course.getTitle());
             req.getRequestDispatcher("/view/course_created.jsp").forward(req, resp);
         }
