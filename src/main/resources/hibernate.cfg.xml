@@ -10,6 +10,7 @@
         <property name="hibernate.show_sql">true</property>
         <property name="connection.username">postgres</property>
         <property name="connection.password">Sam@64hd!+4</property>
+        <property name="hibernate.connection.provider_disables_autocommit">true</property>
 
         <mapping resource="Course.hbm.xml"/>
     </session-factory>
