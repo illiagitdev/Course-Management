@@ -25,7 +25,7 @@
                 <p>Course Status</p>
             </td>
             <td>
-                <select name="Course_status">
+                <select name="course_status">
                     <c:forEach items="${courseStatuses}" var="courseStatus">
                         <option>${courseStatus}</option>
                     </c:forEach>

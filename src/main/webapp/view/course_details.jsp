@@ -33,6 +33,9 @@
                                role="button" tabindex="0">${user.firstName} ${user.lastName}</a>
                         </c:forEach>
                     </c:when>
+                    <c:otherwise>
+                        <p>No students yet!</p>
+                    </c:otherwise>
                 </c:choose>
             </td>
         </tr>

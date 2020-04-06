@@ -41,7 +41,7 @@ public class CourseServlet extends HttpServlet {
             req.setAttribute("course", course);
             req.getRequestDispatcher("/view/course_details.jsp").forward(req, resp);
         } else if (action.startsWith("/createCourse")) {
-            req.setAttribute("courseStatus", CourseStatus.values());
+            req.setAttribute("courseStatuses", CourseStatus.values());
             req.getRequestDispatcher("/view/create_course.jsp").forward(req, resp);
         }
     }
@@ -67,8 +67,8 @@ public class CourseServlet extends HttpServlet {
 
     private List<ErrorMessage> validateCourse(Course course) {
         final List<ErrorMessage> errorMessages = Validator.validateEntity(course);
-        final Course persistentCourse = servise.getByTitle(course.getTitle());
-        if (Objects.nonNull(persistentCourse)) {
+        Course persistentCourse = servise.getByTitle(course.getTitle());
+        if (Objects.nonNull(persistentCourse) && !persistentCourse.getTitle().isEmpty()) {
             errorMessages.add(new ErrorMessage("", "course with title already exists"));
         }
         return errorMessages;

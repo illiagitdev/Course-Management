@@ -14,7 +14,7 @@
             <column name="title" length="50"/>
         </property>
         <property name="courseStatus" column="status" update="true" insert="true">
-            <type name="org.hibernate.type.EntityType">
+            <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">com.courses.management.course.CourseStatus</param>
                 <param name="type">12</param>
                 <param name="useNamed">true</param>
