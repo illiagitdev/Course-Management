@@ -8,20 +8,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CourseDAOImpl implements CourseDAO {
     private static final Logger LOG = LogManager.getLogger(CourseDAOImpl.class);
-    private static final String INSERT = "INSERT INTO course(title, status) VALUES(?, ?);";
-    private static final String FIND_COURSE_BY_TITLE = "SELECT id, title, status FROM course WHERE title = ?;";
-    private static final String UPDATE_COURSE = "UPDATE course SET title = ?, status = ? WHERE id = ?;";
-    private static final String FIND_COURSE_BY_ID = "SELECT id, title, status FROM course WHERE id = ?;";
-    private static final String FIND_ALL_COURSES = "SELECT id, title, status FROM course;";
     private DataSource dataSource;
     private SessionFactory sessionFactory;
 
@@ -33,12 +23,11 @@ public class CourseDAOImpl implements CourseDAO {
     @Override
     public void create(Course course) {
         LOG.debug(String.format("create: course.title=%s", course.getTitle()));
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(INSERT)) {
-            statement.setString(1, course.getTitle());
-            statement.setString(2, course.getCourseStatus().getCourseStatus());
-            statement.execute();
-        } catch (SQLException e) {
+        try (final Session session = sessionFactory.openSession()) {
+            final Transaction transaction = session.beginTransaction();
+            session.save(course);
+            transaction.commit();
+        } catch (Exception e) {
             LOG.error(String.format("Error creating course with title: %s", course.getTitle()), e);
             throw new SQLCourseException("Error occurred when saving a course.");
         }
@@ -52,12 +41,11 @@ public class CourseDAOImpl implements CourseDAO {
     @Override
     public Course get(int id) {
         LOG.debug(String.format("get: course.id=%s", id));
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_COURSE_BY_ID)) {
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            return getCourse(resultSet);
-        } catch (SQLException e) {
+        try (final Session session = sessionFactory.openSession()) {
+            return session.createQuery("from Course c where c.id=:id", Course.class)
+                    .setParameter("id", id)
+                    .uniqueResult();
+        } catch (Exception e) {
             LOG.error(String.format("get: course.id=%s", id), e);
             throw new SQLCourseException("Error occurred when find a course.");
         }
@@ -65,11 +53,9 @@ public class CourseDAOImpl implements CourseDAO {
 
     @Override
     public List<Course> getAll() {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_ALL_COURSES)) {
-            ResultSet resultSet = statement.executeQuery();
-            return getCourseList(resultSet);
-        } catch (SQLException e) {
+        try (final Session session = sessionFactory.openSession()) {
+            return session.createQuery("from Course ", Course.class).getResultList();
+        } catch (Exception e) {
             LOG.error("getAll", e);
             throw new SQLCourseException("Error occurred when find all courses.");
         }
@@ -77,63 +63,26 @@ public class CourseDAOImpl implements CourseDAO {
 
     @Override
     public Course get(String title) {
-        Session session = null;
-        Transaction transaction = null;
-        Course course = null;
-
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-            course = (Course) session.createQuery("from Course c where c.title=:title")
-                    .setParameter("title", title).getSingleResult();
-            transaction.commit();
+        try (final Session session = sessionFactory.openSession()) {
+            return session.createQuery("from Course c where c.title=:title", Course.class)
+                    .setParameter("title", title).uniqueResult();
         } catch (Exception e) {
             LOG.error(String.format("error:get: course.title=%s", title), e);
             throw new SQLCourseException("Error occurred when find a course.");
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
-        return course;
     }
 
     @Override
     public void update(Course course) {
         LOG.debug(String.format("update: course.title=%s, course.status=%s", course.getTitle(),
                 course.getCourseStatus()));
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_COURSE)) {
-            statement.setString(1, course.getTitle());
-            statement.setString(2, course.getCourseStatus().getCourseStatus());
-            statement.setInt(3, course.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
+        try (final Session session = sessionFactory.openSession()) {
+            final Transaction transaction = session.beginTransaction();
+            session.update(course);
+            transaction.commit();
+        } catch (Exception e) {
             LOG.error(String.format("Error updating course with title: %s", course.getTitle()), e);
             throw new SQLCourseException("Error occurred when update a course.");
         }
-    }
-
-    private List<Course> getCourseList(ResultSet rs) throws SQLException {
-        List<Course> courses = new ArrayList<>();
-        while (rs.next()) {
-            courses.add(mapCourse(rs));
-        }
-        return courses;
-    }
-
-    private Course getCourse(ResultSet rs) throws SQLException {
-        if (rs.next()) {
-            return mapCourse(rs);
-        }
-        return null;
-    }
-
-    private Course mapCourse(ResultSet rs) throws SQLException {
-        Course course = new Course();
-        course.setId(rs.getInt("id"));
-        course.setTitle(rs.getString("title"));
-        course.setCourseStatus(CourseStatus.getCourseStatusValue(rs.getString("status")).get());
-        return course;
     }
 }
