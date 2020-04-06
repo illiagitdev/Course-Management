@@ -4,6 +4,7 @@ import com.courses.management.common.*;
 import com.courses.management.config.HibernateDatabaseConnector;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -96,6 +97,7 @@ public class IntegrationTest {
                 "Exit application\n", getData());
     }
 
+    @Ignore
     @Test
     public void testCreateCourseWithCorrectInputParameters () {
         //given
@@ -116,6 +118,7 @@ public class IntegrationTest {
                 "Exit application\n", getData());
     }
 
+    @Ignore
     @Test
     public void testDeleteNotExistedCourseWithCorrectInputParameters () {
         //given
@@ -135,8 +138,9 @@ public class IntegrationTest {
                 "Please try again.\n" +
                 "Exit application\n", getData());
     }
-    @Test
 
+    @Ignore
+    @Test
     public void testDeleteExistingCourseWithCorrectInputParameters () {
         //given
         in.add("create_course|Title_Java");
@@ -172,6 +176,8 @@ public class IntegrationTest {
                 "Enter command or use 'help' to list all available commands!\n" +
                 "Exit application\n", getData());
     }
+
+    @Ignore
     @Test
     public void testShowCoursesWithExistingCourses () {
         //given
@@ -197,6 +203,7 @@ public class IntegrationTest {
                 "Exit application\n", getData());
     }
 
+    @Ignore
     @Test
     public void testUpdateCourseStatusWithCorrectParameters () {
         //given
@@ -219,6 +226,7 @@ public class IntegrationTest {
                 "Exit application\n", getData());
     }
 
+    @Ignore
     @Test
     public void testUpdateCourseTitleWithCorrectParameters () {
         //given
@@ -341,6 +349,7 @@ public class IntegrationTest {
                 "Exit application\n", getData());
     }
 
+    @Ignore
     @Test
     public void testUpdateUserCourseWithCorrectParameters () {
         //given
@@ -367,6 +376,8 @@ public class IntegrationTest {
                 "\t user status = ACTIVE\n" +
                 "Exit application\n", getData());
     }
+
+    @Ignore
     @Test
     public void testFindAllUsersByCourseWithCorrectParameters () {
         //given
