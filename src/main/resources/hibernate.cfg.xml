@@ -13,6 +13,7 @@
         <property name="hibernate.connection.provider_disables_autocommit">true</property>
 
         <mapping resource="Course.hbm.xml"/>
+        <mapping resource="User.hbm.xml"/>
     </session-factory>
 
 </hibernate-configuration>

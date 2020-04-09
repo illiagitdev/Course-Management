@@ -22,9 +22,10 @@
                 <param name="useNamed">true</param>
             </type>
         </property>
-<!--        <set name="users" inverse="true" cascade="all">
-            <key column="CATEGORY_ID" not-null="true"/>
+        <bag name="users" table="users">
+            <key><column name="course_id"/></key>
             <one-to-many class="com.courses.management.user.User"/>
-        </set>-->
+        </bag>
+
     </class>
 </hibernate-mapping>

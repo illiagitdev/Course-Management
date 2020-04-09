@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.courses.management.user.User" table="users" catalog="course_management" schema="public">
+        <id name="id" type="java.lang.Integer">
+            <column name="id"/>
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
+                <param name="swquence_name">users_id_sequence</param>
+                <param name="increment_size">1</param>
+                <param name="optimizer">none</param>
+            </generator>
+        </id>
+        <property name="firstName" column="first_name" length="50" type="java.lang.String"/>
+        <property name="lastName" column="last_name" length="50" type="java.lang.String"/>
+        <property name="email" column="email" length="50" type="java.lang.String" unique="true"/>
+        <property name="userRole" column="user_role" update="true" insert="true">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">com.courses.management.user.UserRole</param>
+                <param name="type">java.sql.Types.VARCHAR</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property><property name="status" column="status" update="true" insert="true">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">com.courses.management.user.UserStatus</param>
+                <param name="type">java.sql.Types.VARCHAR</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+
+        <many-to-one name="course" class="com.courses.management.course.Course" column="course_id"/>
+    </class>
+</hibernate-mapping>
