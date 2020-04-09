@@ -24,7 +24,7 @@ public class IntegrationTest {
     @Before
     public void setup() {
         this.dbConnector = new DatabaseConnectorTest();
-        this.mainController = new MainController(new Console(), dbConnector.getDataSource(), HibernateDatabaseConnector.getSessionFactory());
+        this.mainController = new MainController(new Console(), HibernateDatabaseConnector.getSessionFactory());
         this.in = new CustomImputStream();
         this.out = new ByteArrayOutputStream();
         System.setIn(in);
