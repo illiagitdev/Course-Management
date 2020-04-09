@@ -23,11 +23,16 @@ public class CourseDAOImpl implements CourseDAO {
     @Override
     public void create(Course course) {
         LOG.debug(String.format("create: course.title=%s", course.getTitle()));
+        Transaction transaction = null;
+
         try (final Session session = sessionFactory.openSession()) {
-            final Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.save(course);
             transaction.commit();
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             LOG.error(String.format("Error creating course with title: %s", course.getTitle()), e);
             throw new SQLCourseException("Error occurred when saving a course.");
         }
@@ -41,46 +46,78 @@ public class CourseDAOImpl implements CourseDAO {
     @Override
     public Course get(int id) {
         LOG.debug(String.format("get: course.id=%s", id));
+        Transaction transaction = null;
+        Course course = null;
+
         try (final Session session = sessionFactory.openSession()) {
-            return session.createQuery("from Course c where c.id=:id", Course.class)
+            transaction = session.beginTransaction();
+            course = session.createQuery("from Course c where c.id=:id", Course.class)
                     .setParameter("id", id)
                     .uniqueResult();
+            transaction.commit();
         } catch (Exception e) {
+            if (transaction != null){
+                transaction.rollback();
+            }
             LOG.error(String.format("get: course.id=%s", id), e);
             throw new SQLCourseException("Error occurred when find a course.");
         }
+        return course;
     }
 
     @Override
     public List<Course> getAll() {
+        Transaction transaction = null;
+        List<Course> courses = null;
         try (final Session session = sessionFactory.openSession()) {
-            return session.createQuery("from Course ", Course.class).getResultList();
+            transaction = session.beginTransaction();
+            courses = session.createQuery("from Course ", Course.class).getResultList();
+            transaction.commit();
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             LOG.error("getAll", e);
             throw new SQLCourseException("Error occurred when find all courses.");
         }
+        return courses;
     }
 
     @Override
     public Course get(String title) {
+        LOG.debug(String.format("get: course.title=%s", title));
+        Transaction transaction = null;
+        Course course = null;
+
         try (final Session session = sessionFactory.openSession()) {
-            return session.createQuery("from Course c where c.title=:title", Course.class)
+            transaction = session.beginTransaction();
+            course = session.createQuery("from Course c where c.title=:title", Course.class)
                     .setParameter("title", title).uniqueResult();
+            transaction.commit();
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             LOG.error(String.format("error:get: course.title=%s", title), e);
             throw new SQLCourseException("Error occurred when find a course.");
         }
+        return course;
     }
 
     @Override
     public void update(Course course) {
         LOG.debug(String.format("update: course.title=%s, course.status=%s", course.getTitle(),
                 course.getCourseStatus()));
+        Transaction transaction = null;
+
         try (final Session session = sessionFactory.openSession()) {
-            final Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.update(course);
             transaction.commit();
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             LOG.error(String.format("Error updating course with title: %s", course.getTitle()), e);
             throw new SQLCourseException("Error occurred when update a course.");
         }
