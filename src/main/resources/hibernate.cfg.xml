@@ -14,6 +14,8 @@
 
         <mapping resource="Course.hbm.xml"/>
         <mapping resource="User.hbm.xml"/>
+        <mapping resource="Solution.hbm.xml"/>
+        <mapping resource="Homework.hbm.xml"/>
     </session-factory>
 
 </hibernate-configuration>

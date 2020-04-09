@@ -20,7 +20,8 @@
                 <param name="type">java.sql.Types.VARCHAR</param>
                 <param name="useNamed">true</param>
             </type>
-        </property><property name="status" column="status" update="true" insert="true">
+        </property>
+        <property name="status" column="status" update="true" insert="true">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">com.courses.management.user.UserStatus</param>
                 <param name="type">java.sql.Types.VARCHAR</param>
@@ -29,5 +30,10 @@
         </property>
 
         <many-to-one name="course" class="com.courses.management.course.Course" column="course_id"/>
+
+        <bag name="solutions" table="solution">
+            <key><column name="user_id"/></key>
+            <one-to-many class="com.courses.management.solution.Solutions"/>
+        </bag>
     </class>
 </hibernate-mapping>
