@@ -7,16 +7,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import javax.sql.DataSource;
 import java.util.List;
 
 public class CourseDAOImpl implements CourseDAO {
     private static final Logger LOG = LogManager.getLogger(CourseDAOImpl.class);
-    private DataSource dataSource;
     private SessionFactory sessionFactory;
 
-    public CourseDAOImpl(DataSource dataSource, SessionFactory sessionFactory) {
-        this.dataSource = dataSource;
+    public CourseDAOImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

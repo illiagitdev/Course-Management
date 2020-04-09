@@ -12,7 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.SessionFactory;
 
-import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,10 +20,10 @@ public class MainController {
     private View view;
     private List<Command> commands;
 
-    public MainController(View view, DataSource dataSource, SessionFactory sessionFactory) {
+    public MainController(View view, SessionFactory sessionFactory) {
         this.view = view;
-        final CourseDAOImpl courseDAO = new CourseDAOImpl(dataSource, sessionFactory);
-        final UserDAOImpl userDAO = new UserDAOImpl(dataSource);
+        final CourseDAOImpl courseDAO = new CourseDAOImpl(sessionFactory);
+        final UserDAOImpl userDAO = new UserDAOImpl(sessionFactory);
         this.commands = Arrays.asList(
                 new Help(view),
 

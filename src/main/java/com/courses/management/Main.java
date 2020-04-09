@@ -12,7 +12,7 @@ public class Main {
         View view = new Console();
         DatabaseConnector.init(APPLICATION_PROPERTIES_FILENAME);
         HibernateDatabaseConnector.init();
-        MainController controller = new MainController(view, DatabaseConnector.getDataSource(), HibernateDatabaseConnector.getSessionFactory());
+        MainController controller = new MainController(view, HibernateDatabaseConnector.getSessionFactory());
         controller.read();
     }
 }
