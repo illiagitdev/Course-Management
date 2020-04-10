@@ -24,7 +24,7 @@ public class CourseServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         final SessionFactory sessionFactory = HibernateDatabaseConnector.getSessionFactory();
-        servise = new Courses(new CourseDAOImpl(sessionFactory), new UserDAOImpl(sessionFactory));
+        servise = new Courses(new CourseDAOImpl(sessionFactory));
     }
 
     @Override

@@ -31,7 +31,7 @@ public class CourseDAOImpl implements CourseDAO {
                 transaction.rollback();
             }
             LOG.error(String.format("Error creating course with title: %s", course.getTitle()), e);
-            throw new SQLCourseException("Error occurred when saving a course.");
+            throw new SQLCourseException("Error occurred when create a course.");
         }
     }
 
