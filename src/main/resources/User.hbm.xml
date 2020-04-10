@@ -29,9 +29,9 @@
             </type>
         </property>
 
-        <many-to-one name="course" class="com.courses.management.course.Course" column="course_id"/>
+        <many-to-one name="course" class="com.courses.management.course.Course" column="course_id" lazy="false" fetch="select"/>
 
-        <bag name="solutions" table="solution">
+        <bag name="solutions" table="solution" lazy="false" fetch="select">
             <key><column name="user_id"/></key>
             <one-to-many class="com.courses.management.solution.Solutions"/>
         </bag>

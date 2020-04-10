@@ -21,7 +21,7 @@
         </property>
         <property name="mark" type="java.lang.Integer"/>
 
-        <many-to-one name="user" column="user_id" class="com.courses.management.user.User"/>
-        <many-to-one name="homework" column="home_work_id" class="com.courses.management.homework.Homework"/>
+        <many-to-one name="user" column="user_id" class="com.courses.management.user.User" lazy="false" fetch="select"/>
+        <many-to-one name="homework" column="home_work_id" class="com.courses.management.homework.Homework" lazy="false" fetch="select"/>
     </class>
 </hibernate-mapping>

@@ -22,12 +22,12 @@
                 <param name="useNamed">true</param>
             </type>
         </property>
-        <bag name="users" table="users">
+        <bag name="users" table="users" lazy="false" fetch="select">
             <key><column name="course_id"/></key>
             <one-to-many class="com.courses.management.user.User"/>
         </bag>
 
-        <bag name="homework" table="home_work">
+        <bag name="homework" table="home_work" lazy="false" fetch="select">
             <key><column name="course_id"/></key>
             <one-to-many class="com.courses.management.homework.Homework"/>
         </bag>
