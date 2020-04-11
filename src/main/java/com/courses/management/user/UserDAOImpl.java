@@ -61,7 +61,7 @@ public class UserDAOImpl implements UserDAO {
         Transaction transaction = null;
         try (final Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
-            session.delete(session.find(User.class, id));
+            session.createQuery("DELETE User u where u.id=:id").setParameter("id", id).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -75,11 +75,14 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User get(int id) {
         LOG.debug(String.format("get: user.id=%d", id));
+        Transaction transaction = null;
         try (final Session session = sessionFactory.openSession()){
-            return session.createQuery("from User u where u.id=:id", User.class)
-                    .setParameter("id", id)
-                    .uniqueResult();
+            transaction = session.beginTransaction();
+            return session.get(User.class, id);
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction = null;
+            }
             LOG.error(String.format("get: user.id=%d", id), e);
             throw new SQLUserException("Error occurred when retrieving user");
         }

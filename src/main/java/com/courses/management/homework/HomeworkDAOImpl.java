@@ -58,7 +58,7 @@ public class HomeworkDAOImpl implements HomeworkDAO {
 
         try (final Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
-            session.delete(session.find(Homework.class, id));
+            session.createQuery("DELETE Homework h where h.id=:id").setParameter("id", id).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {

@@ -57,7 +57,7 @@ public class SolutionDAOImpl implements SolutionDao {
 
         try (final Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
-            session.delete(session.find(Solutions.class, id));
+            session.createQuery("DELETE Solutions s where s.id=:id").setParameter("id", id).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
