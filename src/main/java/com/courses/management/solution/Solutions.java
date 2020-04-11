@@ -4,6 +4,10 @@ import com.courses.management.common.BaseEntity;
 import com.courses.management.homework.Homework;
 import com.courses.management.user.User;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "solution")
 public class Solutions extends BaseEntity {
     private String text;
     private SolutionStatus status;
@@ -11,6 +15,7 @@ public class Solutions extends BaseEntity {
     private Homework homework;
     private User user;
 
+    @Column(name = "text")
     public String getText() {
         return text;
     }
@@ -19,6 +24,8 @@ public class Solutions extends BaseEntity {
         this.text = text;
     }
 
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     public SolutionStatus getStatus() {
         return status;
     }
@@ -27,6 +34,7 @@ public class Solutions extends BaseEntity {
         this.status = status;
     }
 
+    @Column(name = "mark")
     public int getMark() {
         return mark;
     }
@@ -35,6 +43,7 @@ public class Solutions extends BaseEntity {
         this.mark = mark;
     }
 
+    @ManyToOne
     public Homework getHomework() {
         return homework;
     }
@@ -43,6 +52,7 @@ public class Solutions extends BaseEntity {
         this.homework = homework;
     }
 
+    @ManyToOne
     public User getUser() {
         return user;
     }
