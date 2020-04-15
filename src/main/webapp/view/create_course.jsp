@@ -4,8 +4,7 @@
 <head>
     <title>Create Course</title>
     <style>
-        <%@include file="/view/style.css"%>
-        <%@include file="/view/style-form.css"%>
+        <%@include file="/view/css/style.css"%>
     </style>
 </head>
 <body>
