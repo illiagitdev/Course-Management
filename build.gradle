@@ -25,6 +25,7 @@ dependencies {
 
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: "${log4jVersion}"
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: "${log4jVersion}"
+    compile group: 'org.ehcache', name: 'ehcache', version: '3.3.1'
     compile group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.30'
     compile group: 'javax.servlet', name: 'jstl', version: '1.2'
 

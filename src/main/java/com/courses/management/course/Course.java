@@ -10,9 +10,12 @@ import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
 @Table(name = "course")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = "Course")
 public class Course extends BaseEntity implements Serializable {
     private String title;
     private List<User> users;

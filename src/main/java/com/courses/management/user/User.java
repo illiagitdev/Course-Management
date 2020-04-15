@@ -7,9 +7,12 @@ import com.courses.management.solution.Solutions;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
 @Table(name = "users")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = "User")
 public class User extends BaseEntity {
     private String firstName;
     private String lastName;
