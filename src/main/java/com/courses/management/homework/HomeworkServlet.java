@@ -1,6 +1,7 @@
 package com.courses.management.homework;
 
 import com.courses.management.config.HibernateDatabaseConnector;
+import com.courses.management.course.CourseDAOImpl;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -23,8 +24,8 @@ public class HomeworkServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        final SessionFactory sessionFactory = HibernateDatabaseConnector.getSessionFactory();
-        service = new Homeworks(new HomeworkDAOImpl(sessionFactory));
+        service = new Homeworks(new HomeworkDAOImpl(HibernateDatabaseConnector.getSessionFactory()),
+                new CourseDAOImpl(HibernateDatabaseConnector.getSessionFactory()));
     }
 
     @Override
@@ -32,21 +33,16 @@ public class HomeworkServlet extends HttpServlet {
         final String action = getAction(req);
 
         if (action.startsWith("/upload")) {
+            String courseId = req.getParameter("course_id");
+            req.setAttribute("courseId", courseId);
             req.getRequestDispatcher("/view/create-homework.jsp").forward(req, resp);
         } else if (action.startsWith("/get")) {
-            String idValue = req.getParameter("id");
-            int id = Integer.parseInt(idValue);
-            Homework homework = service.getHomework(id);
-//            File file = new File(homework.getPath());
-            File file = new File("d:\\java\\projects\\files\\courseManagement\\1768019004_Партер_R-27_P-59_1768019004_637179799764400152.pdf");
-            file.exists();
-            resp.setHeader("Content-Type", getServletContext().getMimeType(file.getName()));
-            resp.setHeader("Content-Length", String.valueOf(file.length()));
-            resp.setHeader("Content-Disposition", "inline; filename=\"1768019004_Партер_R-27_P-59_1768019004_637179799764400152.pdf\"");
-            Files.copy(file.toPath(), resp.getOutputStream());
+            getHomework(req, resp);
+        } else if (action.startsWith("/preview")) {
+            final String homeworkId = req.getParameter("id");
+            req.setAttribute("homeworkId", homeworkId);
+            req.getRequestDispatcher("/view/preview_homework.jsp").forward(req, resp);
         }
-
-
     }
 
     @Override
@@ -54,19 +50,40 @@ public class HomeworkServlet extends HttpServlet {
         final String action = getAction(req);
 
         if (action.startsWith("/upload")) {
+            Integer courseId = null;
             if (ServletFileUpload.isMultipartContent(req)) {
                 try {
+                    courseId = Integer.valueOf(req.getParameter("course_id"));
                     List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(req);
 
-                    req.setAttribute("message", "File Uploaded Successfully");
+                    service.uploadFile(multiparts, courseId);
                 } catch (Exception e) {
-                    req.setAttribute("message", "File upload fail due to " + e);
+                    processError(req, resp, "File upload fail due to " + e.getMessage(),
+                            "/view/create_homework.jsp");
                 }
             } else {
-                req.setAttribute("message", "File not found");
+                processError(req, resp, "File not found", "/view/create_homework.jsp");
             }
         }
-        req.getRequestDispatcher("/view/homework_uploaded.jsp").forward(req, resp);
+    }
+
+    private void getHomework(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        Integer homeworkId = Integer.valueOf(req.getParameter("id"));
+        Homework homework = service.getHomework(homeworkId);
+        File file = new File(homework.getPath());
+        if (file.exists()) {
+            processError(req, resp, "No File Found", "/view/course_details.jsp");
+        }
+        resp.setHeader("Content-Type", getServletContext().getMimeType(file.getName()));
+        resp.setHeader("Content-Length", String.valueOf(file.length()));
+        resp.setHeader("Content-Disposition", String.format("inline; filename=\"%s\"", homework.getTitle()));
+        Files.copy(file.toPath(), resp.getOutputStream());
+    }
+
+    private void processError(HttpServletRequest req, HttpServletResponse resp, String message, String jspPath)
+            throws ServletException, IOException {
+        req.setAttribute("error", message);
+        req.getRequestDispatcher(jspPath).forward(req, resp);
     }
 
     private String getAction (HttpServletRequest request) {

@@ -1,6 +1,6 @@
 package com.courses.management.homework;
 
-import com.courses.management.course.CourseDAOImpl;
+import com.courses.management.common.exceptions.SQLUserException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
@@ -10,7 +10,7 @@ import org.hibernate.Transaction;
 import java.util.List;
 
 public class HomeworkDAOImpl implements HomeworkDAO {
-    private static final Logger LOG = LogManager.getLogger(CourseDAOImpl.class);
+    private static final Logger LOG = LogManager.getLogger(HomeworkDAOImpl.class);
     private SessionFactory sessionFactory;
 
     public HomeworkDAOImpl(SessionFactory sessionFactory) {
@@ -31,6 +31,7 @@ public class HomeworkDAOImpl implements HomeworkDAO {
                 transaction.rollback();
             }
             LOG.error(String.format("Error creating homework with title=%s", homework.getTitle()), e);
+            throw new SQLUserException("Error occurred when creating a homework");
         }
     }
 
@@ -48,6 +49,7 @@ public class HomeworkDAOImpl implements HomeworkDAO {
                 transaction.rollback();
             }
             LOG.error(String.format("Error updating homework with title=%s", homework.getTitle()), e);
+            throw new SQLUserException("Error occurred when updating a homework");
         }
     }
 
@@ -58,13 +60,16 @@ public class HomeworkDAOImpl implements HomeworkDAO {
 
         try (final Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
-            session.createQuery("DELETE Homework h where h.id=:id").setParameter("id", id).executeUpdate();
+            session.createQuery("DELETE Homework h where h.id=:id")
+                    .setParameter("id", id)
+                    .executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             LOG.error(String.format("Error deleting homework with id: %s", id), e);
+            throw new SQLUserException("Error occurred when removing a homework");
         }
     }
 
@@ -77,8 +82,8 @@ public class HomeworkDAOImpl implements HomeworkDAO {
                     .uniqueResult();
         } catch (Exception e) {
             LOG.error(String.format("Error retrieving course with id:%s", id), e);
+            throw new SQLUserException("Error occurred when retrieving a homework");
         }
-        return null;
     }
 
     @Override
@@ -87,8 +92,8 @@ public class HomeworkDAOImpl implements HomeworkDAO {
             return session.createQuery("from Homework ", Homework.class).getResultList();
         } catch (Exception e) {
             LOG.error("Error retrieving courses.", e);
+            throw new SQLUserException("Error occurred when retrieving all homeworks");
         }
-        return null;
     }
 
     @Override
@@ -100,7 +105,7 @@ public class HomeworkDAOImpl implements HomeworkDAO {
                     .getResultList();
         } catch (Exception e) {
             LOG.error(String.format("Error retrieving homework for course with id:%s", courseId), e);
+            throw new SQLUserException("Error occurred when retrieving all homeworks by course");
         }
-        return null;
     }
 }
