@@ -1,20 +1,19 @@
 package com.courses.management.homework;
 
 import com.courses.management.common.exceptions.SQLUserException;
+import com.courses.management.config.HibernateDatabaseConnector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import java.util.List;
 
 public class HomeworkDAOImpl implements HomeworkDAO {
     private static final Logger LOG = LogManager.getLogger(HomeworkDAOImpl.class);
-    private SessionFactory sessionFactory;
 
-    public HomeworkDAOImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public HomeworkDAOImpl() {
+
     }
 
     @Override
@@ -22,7 +21,7 @@ public class HomeworkDAOImpl implements HomeworkDAO {
         LOG.info(String.format("create: homework.title=%s", homework.getTitle()));
         Transaction transaction = null;
 
-        try (final Session session = sessionFactory.openSession()){
+        try (final Session session = HibernateDatabaseConnector.getSessionFactory().openSession()){
             transaction = session.beginTransaction();
             session.save(homework);
             transaction.commit();
@@ -40,7 +39,7 @@ public class HomeworkDAOImpl implements HomeworkDAO {
         LOG.info(String.format("update: homework.title=%s", homework.getTitle()));
         Transaction transaction = null;
 
-        try (final Session session = sessionFactory.openSession()) {
+        try (final Session session = HibernateDatabaseConnector.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             session.update(homework);
             transaction.commit();
@@ -58,7 +57,7 @@ public class HomeworkDAOImpl implements HomeworkDAO {
         LOG.debug(String.format("delete: homework.id=%s", id));
         Transaction transaction = null;
 
-        try (final Session session = sessionFactory.openSession()){
+        try (final Session session = HibernateDatabaseConnector.getSessionFactory().openSession()){
             transaction = session.beginTransaction();
             session.createQuery("DELETE Homework h where h.id=:id")
                     .setParameter("id", id)
@@ -76,7 +75,7 @@ public class HomeworkDAOImpl implements HomeworkDAO {
     @Override
     public Homework get(int id) {
         LOG.debug(String.format("get(id): homework.id=%s", id));
-        try (final Session session = sessionFactory.openSession()){
+        try (final Session session = HibernateDatabaseConnector.getSessionFactory().openSession()){
             return session.createQuery("from Homework h where h.id=:id", Homework.class)
                     .setParameter("id", id)
                     .uniqueResult();
@@ -88,7 +87,7 @@ public class HomeworkDAOImpl implements HomeworkDAO {
 
     @Override
     public List<Homework> getAll() {
-        try (final Session session = sessionFactory.openSession()){
+        try (final Session session = HibernateDatabaseConnector.getSessionFactory().openSession()){
             return session.createQuery("from Homework ", Homework.class).getResultList();
         } catch (Exception e) {
             LOG.error("Error retrieving courses.", e);
@@ -99,7 +98,7 @@ public class HomeworkDAOImpl implements HomeworkDAO {
     @Override
     public List<Homework> getAll(int courseId) {
         LOG.debug(String.format("getAll(courseId): homework.courseId=%s", courseId));
-        try (final Session session = sessionFactory.openSession()){
+        try (final Session session = HibernateDatabaseConnector.getSessionFactory().openSession()){
             return session.createQuery("from Homework h where h.course.id=:courseId", Homework.class)
                     .setParameter("courseId", courseId)
                     .getResultList();

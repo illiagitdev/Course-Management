@@ -2,9 +2,6 @@ package com.courses.management.course;
 
 import com.courses.management.common.Validator;
 import com.courses.management.common.exceptions.ErrorMessage;
-import com.courses.management.config.HibernateDatabaseConnector;
-import com.courses.management.user.UserDAOImpl;
-import org.hibernate.SessionFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,8 +20,7 @@ public class CourseServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        final SessionFactory sessionFactory = HibernateDatabaseConnector.getSessionFactory();
-        servise = new Courses(new CourseDAOImpl(sessionFactory));
+        servise = new Courses(new CourseDAOImpl());
     }
 
     @Override
