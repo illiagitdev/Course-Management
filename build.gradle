@@ -36,6 +36,7 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-aspects', version: "${springVertion}"
     compile group: 'org.springframework', name: 'spring-web', version: "${springVertion}"
     compile group: 'org.springframework', name: 'spring-jdbc', version: "${springVertion}"
+    compile group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.2.6.RELEASE'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.28.2'

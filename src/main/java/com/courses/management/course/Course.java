@@ -64,7 +64,7 @@ public class Course extends BaseEntity implements Serializable {
 //        this.calendar = calendar;
 //    }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "course")
     public List<Homework> getHomework() {
         return homework;
     }
