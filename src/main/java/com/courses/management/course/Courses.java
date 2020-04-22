@@ -1,7 +1,6 @@
 package com.courses.management.course;
 
 import com.courses.management.common.View;
-import com.courses.management.common.command.util.InputString;
 
 import java.util.List;
 
@@ -10,15 +9,6 @@ public class Courses {
 
     public Courses(CourseDAO courseDAO) {
         this.courseDAO = courseDAO;
-    }
-
-    public static Course mapCourse(InputString input) {
-        String[] parameters = input.getParameters();
-        String title = parameters[1];
-        Course course = new Course();
-        course.setTitle(title);
-        course.setCourseStatus(CourseStatus.NOT_STARTED);
-        return course;
     }
 
     public static void printCourse(View view, Course course) {

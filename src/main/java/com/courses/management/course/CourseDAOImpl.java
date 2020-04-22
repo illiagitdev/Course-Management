@@ -13,7 +13,6 @@ public class CourseDAOImpl implements CourseDAO {
     private static final Logger LOG = LogManager.getLogger(CourseDAOImpl.class);
 
     public CourseDAOImpl() {
-
     }
 
     @Override
