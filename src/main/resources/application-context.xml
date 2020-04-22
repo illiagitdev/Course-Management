@@ -10,7 +10,7 @@
     <context:annotation-config/>
     <context:component-scan base-package="com.courses.management"/>
 
-   <bean id="homeworkDAO" class="com.courses.management.homework.HomeworkDAOImpl"/>
+    <bean id="homeworkDAO" class="com.courses.management.homework.HomeworkDAOImpl"/>
     <bean id="courseDAO" class="com.courses.management.course.CourseDAOImpl"/>
     <bean id="homeworks" class="com.courses.management.homework.Homeworks">
         <constructor-arg ref="homeworkDAO"/>
@@ -18,5 +18,14 @@
     </bean>
     <bean id="courses" class="com.courses.management.course.Courses">
         <constructor-arg ref="courseDAO"/>
+    </bean>
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="jdbc:postgresql://localhost:5547/course_management"/>
+        <property name="username" value="postgres"/>
+        <property name="password" value="Sam@64hd!+4"/>
     </bean>
 </beans>

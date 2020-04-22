@@ -6,29 +6,31 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
 public class HomeworkDAOImpl implements HomeworkDAO {
     private static final Logger LOG = LogManager.getLogger(HomeworkDAOImpl.class);
 
-    public HomeworkDAOImpl() {
+   private JdbcTemplate template;
 
+    public HomeworkDAOImpl() {
+    }
+
+    @Autowired
+    public HomeworkDAOImpl(JdbcTemplate jdbcTemplate) {
+        this.template = jdbcTemplate;
     }
 
     @Override
     public void create(Homework homework) {
         LOG.info(String.format("create: homework.title=%s", homework.getTitle()));
-        Transaction transaction = null;
-
-        try (final Session session = HibernateDatabaseConnector.getSessionFactory().openSession()){
-            transaction = session.beginTransaction();
-            session.save(homework);
-            transaction.commit();
+        try {
+            template.update("INSERT INTO home_work(title, text, file_path, course_id) VALUES (?, ?, ?, ?)",
+                    homework.getTitle(), homework.getText(), homework.getPath(), homework.getCourse().getId());
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             LOG.error(String.format("Error creating homework with title=%s", homework.getTitle()), e);
             throw new SQLUserException("Error occurred when creating a homework");
         }
