@@ -19,7 +19,8 @@ public class Homeworks {
     }
 
     public void uploadFile(List<FileItem> items, Integer courseId) {
-        Course course = courseRepository.findById(courseId).get();
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException(String.format("Course with id=%s not found", courseId)));
         Homework homework = null;
         try {
             for (FileItem item : items) {
@@ -57,6 +58,7 @@ public class Homeworks {
     }
 
     public Homework getHomework(int id) {
-        return homeworkRepository.findById(id).get();
+        return homeworkRepository.findById(id)
+                .orElse(new Homework());
     }
 }

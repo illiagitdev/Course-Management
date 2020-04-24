@@ -14,8 +14,8 @@ public class Courses {
     }
 
     public Course getById(Integer id) {
-        final Course course = courseRepository.findById(id).get();
-        return course;
+        return courseRepository.findById(id)
+                .orElse(new Course());
     }
 
     public Course getByTitle (String title) {
