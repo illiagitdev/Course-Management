@@ -12,7 +12,7 @@
 
 <div id="stylized" class="myform">
     <form id="form" name="form" method="post" action="createCourse">
-        <h1>Create project form</h1>
+        <h1 align="center">Create project form</h1>
 
         <label>Course title
             <span class="small">Course title</span>

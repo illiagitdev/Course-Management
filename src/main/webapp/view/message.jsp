@@ -9,6 +9,6 @@
 </head>
 <body>
 <c:import url="/view/navig-bar.jsp"/>
-<p>Course with title ${course_title} created!</p>
+<h2 align="center">Course with title ${message} created!</h2>
 </body>
 </html>
