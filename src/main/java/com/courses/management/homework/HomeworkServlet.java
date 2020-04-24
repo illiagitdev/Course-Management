@@ -81,7 +81,7 @@ public class HomeworkServlet extends HttpServlet {
         Homework homework = homeworks.getHomework(homeworkId);
         File file = new File(homework.getPath());
         if (!file.exists()) {
-            processError(req, resp, "No File Found", "/view/course_details.jsp");
+            processError(req, resp, "No File Found", "/view/course-details.jsp");
         }
         resp.setHeader("Content-Type", getServletContext().getMimeType(file.getName()));
         resp.setHeader("Content-Length", String.valueOf(file.length()));

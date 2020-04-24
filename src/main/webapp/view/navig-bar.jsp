@@ -23,7 +23,7 @@
             <i class="fa fa-caret-down"></i>
         </button>
         <div class="dropdown-content">
-            <a href="#">Create User</a>
+            <a href="${pageContext.request.contextPath}/user/createUser">Create User</a>
             <a href="#">Find User</a>
             <a href="#">Link 3</a>
         </div>

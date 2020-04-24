@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@WebServlet(urlPatterns = "/course/*")
+//@WebServlet(urlPatterns = "/course/*")
 public class CourseServlet extends HttpServlet {
     private Courses courses;
 
@@ -37,15 +37,15 @@ public class CourseServlet extends HttpServlet {
         if (action.startsWith("/showCourses")) {
             List<Course> courses = this.courses.showCourses();
             req.setAttribute("courses", courses);
-            req.getRequestDispatcher("/view/show_courses.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/show-courses.jsp").forward(req, resp);
         } else if (action.startsWith("/get")) {
             final String id = req.getParameter("id");
             final Course course = courses.getById(Integer.valueOf(id));
             req.setAttribute("course", course);
-            req.getRequestDispatcher("/view/course_details.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/course-details.jsp").forward(req, resp);
         } else if (action.startsWith("/createCourse")) {
             req.setAttribute("courseStatuses", CourseStatus.values());
-            req.getRequestDispatcher("/view/create_course.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/create-course.jsp").forward(req, resp);
         }
     }
 
@@ -59,7 +59,7 @@ public class CourseServlet extends HttpServlet {
             if (!errorMessage.isEmpty()) {
                 req.setAttribute("errors", errorMessage);
                 req.setAttribute("courseStatuses", CourseStatus.values());
-                req.getRequestDispatcher("/view/create_course.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/create-course.jsp").forward(req, resp);
             } else {
                 courses.createCourse(course);
                 req.setAttribute("message", course.getTitle());
