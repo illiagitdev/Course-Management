@@ -10,7 +10,8 @@
 <body>
 <c:import url="/view/navig-bar.jsp"/>
 <div align="center">
-    <object data="${pageContext.request.contextPath}/homework/get?id=${homeworkId}"
+    <h3>${pageContext.request.contextPath}/homework/getFile?homeworkId=${homeworkId}"</h3>
+    <object data="${pageContext.request.contextPath}/homework/getFile?homeworkId=${homeworkId}"
             type="application/pdf" width="1000" height="600"></object>
 </div>
 </body>

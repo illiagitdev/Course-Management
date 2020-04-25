@@ -9,7 +9,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
-@Controller@RequestMapping(path = "/course/*")
+@Controller
+@RequestMapping(path = "/course/*")
 public class CourseController {
     private Courses courses;
 

@@ -49,7 +49,7 @@ public class HomeworkServlet extends HttpServlet {
         } else if (action.startsWith("/preview")) {
             final String homeworkId = req.getParameter("id");
             req.setAttribute("homeworkId", homeworkId);
-            req.getRequestDispatcher("/view/preview_homework.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/preview-homework.jsp").forward(req, resp);
         }
     }
 
