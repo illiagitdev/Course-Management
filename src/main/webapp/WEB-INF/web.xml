@@ -29,6 +29,12 @@
             <param-value>classpath:application-context.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
+        <multipart-config>
+            <location>d:\java\projects\files\courseManagement</location>
+            <max-file-size>20971520</max-file-size><!--20MB-->
+            <max-request-size>20971520</max-request-size><!--20MB-->
+            <file-size-threshold>0</file-size-threshold>
+        </multipart-config>
     </servlet>
 
     <servlet-mapping>
