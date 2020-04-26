@@ -26,11 +26,9 @@ public class CourseController {
     }
 
     @GetMapping(path = "/get")
-    public ModelAndView getCourse(@RequestParam(name = "id") String id, ModelAndView model) {
-        final Course course = courses.getById(Integer.parseInt(id));
-        model.setViewName("course-details");
-        model.addObject("course", course);
-        return model;
+    public String getCourse(@RequestParam(name = "id") Integer id, Model model) {
+        model.addAttribute("course", courses.getById(id));
+        return "course-details";
     }
 
     @GetMapping(path = "/createCourses")
@@ -50,6 +48,21 @@ public class CourseController {
          courses.createCourse(course);
          model.addAttribute("message", course.getTitle());
          return "message";
+    }
+
+    @GetMapping(path = "/findCourseView")
+    public String findCourseView(){
+        return "find-course";
+    }
+
+    @GetMapping(path = "/findCourse")
+    public String findCourse(@RequestParam("courseName") String courseName, Model model){
+        Course course = courses.getByTitle(courseName);
+        if (course.getTitle().equals("")){
+            return "find-course";
+        }
+        model.addAttribute("course", course);
+        return "course-details";
     }
 
     @ModelAttribute("course")
