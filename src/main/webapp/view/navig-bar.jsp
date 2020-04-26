@@ -15,7 +15,7 @@
         <div class="dropdown-content">
             <a href="${pageContext.request.contextPath}/course/showCourses">Show Courses</a>
             <a href="${pageContext.request.contextPath}/course/createCourses">Create Course</a>
-            <a href="${pageContext.request.contextPath}/course/findCourses">Find Course</a>
+            <a href="${pageContext.request.contextPath}/course/findCourseView">Find Course</a>
         </div>
     </div>
     <div class="dropdown">
@@ -23,9 +23,8 @@
             <i class="fa fa-caret-down"></i>
         </button>
         <div class="dropdown-content">
-            <a href="${pageContext.request.contextPath}/user/createUser">Create User</a>
-            <a href="#">Find User</a>
-            <a href="#">Link 3</a>
+            <a href="${pageContext.request.contextPath}/user/create">Create User</a>
+            <a href="${pageContext.request.contextPath}/user/showUsers">Show users</a>
         </div>
     </div>
 </div></body>

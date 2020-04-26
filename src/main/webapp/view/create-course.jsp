@@ -22,7 +22,7 @@
         <label>Course Status
             <span class="small">Select status</span>
         </label>
-        <form:select path="courseStatus" items="${courseStatuses}"/><form:errors path="courseStatus" cssClass="erroe"/>
+        <form:select path="courseStatus" items="${courseStatuses}"/><form:errors path="courseStatus" cssClass="error"/>
 
         <button type="submit" class="button">Create</button>
         <div class="spacer"></div>

@@ -26,4 +26,8 @@ public class Courses {
         courseRepository.save(course);
         return course;
     }
+
+    public List<String> getCourseTitles() {
+        return courseRepository.getTitles();
+    }
 }

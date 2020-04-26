@@ -5,6 +5,7 @@ import com.courses.management.course.Course;
 import com.courses.management.solution.Solutions;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Objects;
 import org.hibernate.annotations.Cache;
@@ -43,6 +44,7 @@ public class User extends BaseEntity {
         this.lastName = lastName;
     }
 
+    @NotEmpty
     @Column(name = "email")
     public String getEmail() {
         return email;
