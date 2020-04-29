@@ -27,6 +27,11 @@
         <button type="submit" class="button">Create</button>
         <div class="spacer"></div>
     </form:form>
+    <c:if test="${not empty errors}">
+        <c:forEach items="${errors}" var="error">
+            <p style="color: red">${error.field} ${error.error}</p>
+        </c:forEach>
+    </c:if>
 </div>
 
 </body>

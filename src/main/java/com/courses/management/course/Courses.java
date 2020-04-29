@@ -1,6 +1,7 @@
 package com.courses.management.course;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Courses {
     private CourseRepository courseRepository;
@@ -23,6 +24,9 @@ public class Courses {
     }
 
     public Course createCourse(Course course) {
+        if(Objects.isNull(getByTitle(course.getTitle()))) {
+            throw new CourseAlreadyExistError(String.format("course with title%s already exists", course.getTitle()));
+        }
         courseRepository.save(course);
         return course;
     }
