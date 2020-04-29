@@ -1,6 +1,5 @@
 package com.courses.management.homework;
 
-import com.courses.management.common.PropertiesUtil;
 import com.courses.management.course.Course;
 import com.courses.management.course.CourseRepository;
 import org.apache.commons.fileupload.FileItem;
@@ -12,10 +11,15 @@ import java.util.Objects;
 public class Homeworks {
     private HomeworkRepository homeworkRepository;
     private CourseRepository courseRepository;
+    private String folderPath;
 
     public Homeworks(HomeworkRepository homeworkRepository, CourseRepository courseRepository) {
         this.homeworkRepository = homeworkRepository;
         this.courseRepository = courseRepository;
+    }
+
+    public void setFolderPath(String folderPath) {
+        this.folderPath = folderPath;
     }
 
     public void uploadFile(List<FileItem> items, Integer courseId) {
@@ -45,7 +49,7 @@ public class Homeworks {
         Homework homework = new Homework();
         homework.setCourse(course);
         String title = new File(item.getName()).getName();
-        String path = PropertiesUtil.getFolderPath() + File.separator + course.getTitle() + File.separator + title;
+        String path = String.format("%s%s%s%s%s",folderPath, File.separator, course.getTitle(), File.separator, title);
         homework.setTitle(title);
         homework.setPath(path);
         return homework;

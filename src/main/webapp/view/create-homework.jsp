@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Create Homework</title>
@@ -9,14 +9,13 @@
 </head>
 <body>
 <c:import url="/view/navig-bar.jsp"/>
-<form:form if="form" action="upload?course_id=${course_id}" modelAttribute="fileBucket" method="post" enctype="multipart/form-data">
-    <form:input type="file" id="file" path="file"/>
-    <div class="has-error">
-        <form:errors path="file" class="help-inline"/>
-    </div>
-    <br />
-    <input type="submit" class="button" value="Upload" />
-</form:form>
+
+<form id="form" action="upload?course_id=${course_id}" method="post"
+      enctype="multipart/form-data">
+    <input type="file" name="file" size="50"/>
+    <br/>
+    <input type="submit" class="button" value="Upload"/>
+</form>
 <c:if test="${not empty error}">
     <p style="color: red">${error}</p>
 </c:if>
