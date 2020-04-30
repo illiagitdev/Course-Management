@@ -13,11 +13,16 @@
         <property name="folderPath" value="${folder_path}"/>
     </bean>
 
+    <bean id="homeworkController" class="com.courses.management.homework.HomeworkController">
+        <property name="homeworks" ref="homeworks"/>
+    </bean>
+
     <bean id="users" class="com.courses.management.user.Users">
         <constructor-arg ref="userRepository"/>
     </bean>
 
-    <bean id="homeworkController" class="com.courses.management.homework.HomeworkController">
-        <property name="homeworks" ref="homeworks"/>
+    <bean name="userController" class="com.courses.management.user.UserController">
+        <property name="courses" ref="courses"/>
+        <property name="users" ref="users"/>
     </bean>
 </beans>

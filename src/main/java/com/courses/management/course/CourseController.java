@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping(path = "/course/*")
+@RequestMapping(path = "/course")
 public class CourseController {
     private Courses courses;
 

@@ -21,7 +21,7 @@ import java.nio.file.Files;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/homework/*")
+@RequestMapping(value = "/homework")
 public class HomeworkController {
     private Homeworks homeworks;
 

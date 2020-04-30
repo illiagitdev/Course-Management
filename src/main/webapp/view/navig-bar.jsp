@@ -25,6 +25,7 @@
         <div class="dropdown-content">
             <a href="${pageContext.request.contextPath}/user/create">Create User</a>
             <a href="${pageContext.request.contextPath}/user/showUsers">Show users</a>
+            <a href="${pageContext.request.contextPath}/user/findUsers">Find users</a>
         </div>
     </div>
 </div></body>

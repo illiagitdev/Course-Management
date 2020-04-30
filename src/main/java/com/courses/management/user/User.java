@@ -5,6 +5,7 @@ import com.courses.management.course.Course;
 import com.courses.management.solution.Solutions;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Objects;
@@ -45,6 +46,7 @@ public class User extends BaseEntity {
     }
 
     @NotEmpty
+    @Email
     @Column(name = "email")
     public String getEmail() {
         return email;

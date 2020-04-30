@@ -71,3 +71,7 @@ ALTER TABLE users ALTER COLUMN last_name SET NOT NULL;
 ALTER TABLE home_work
     ALTER COLUMN title TYPE VARCHAR(200),
     ALTER COLUMN file_path TYPE VARCHAR(200);
+    
+    ALTER TABLE solution
+    RENAME COLUMN home_work_id TO homework_id;
+    

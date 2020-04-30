@@ -1,7 +1,6 @@
 package com.courses.management.user;
 
 import com.courses.management.course.Courses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,19 +9,47 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping(path = "/user/*")
+@RequestMapping(path = "/user")
 public class UserController {
     private Users users;
     private Courses courses;
 
-    @Autowired
     public void setUsers(Users users) {
         this.users = users;
     }
 
-    @Autowired
     public void setCourses(Courses courses) {
         this.courses = courses;
+    }
+
+    @GetMapping("/get")
+    public String getUser(@RequestParam("id") Integer id, Model model) {
+        model.addAttribute("userDetails", users.findUser(id));
+        return "user-details";
+    }
+
+    @GetMapping(path = "/showUsers")
+    public String showUsersByCourseView(Model model) {
+        model.addAttribute("users", users.showUsers());
+        return "show-users";
+    }
+
+    @GetMapping(path = "/findUsers")
+    public String showFindUserPage() {
+        return "find-user";
+    }
+
+    @GetMapping(path = "/find")
+    public String findUser(@RequestParam("email") String email, Model model) {
+        User user = null;
+        try {
+            user = users.getUser(email);
+        } catch (UserNotExistException ex) {
+            model.addAttribute("error", ex.getMessage());
+            return "find-user";
+        }
+        model.addAttribute("userDetails", user);
+        return "user-details";
     }
 
     @GetMapping(path = "/create")
@@ -44,12 +71,6 @@ public class UserController {
         return "user-details";
     }
 
-    @GetMapping("/get")
-    public String getUser(@RequestParam("id") Integer id, Model model) {
-        model.addAttribute("userDetails", users.findUser(id));
-        return "user-details";
-    }
-
     @GetMapping(path = "/updateUser")
     public String updateUserView(@RequestParam("id") Integer id, Model model) {
         model.addAttribute("userDetails", users.findUser(id));
@@ -68,12 +89,6 @@ public class UserController {
         users.update(id, user);
         model.addAttribute("userDetails", users.findUser(id));
         return "user-details";
-    }
-
-    @GetMapping(path = "/showUsers")
-    public String showUsersByCourseView(Model model) {
-        model.addAttribute("users", users.showUsers());
-        return "show-users";
     }
 
     @ModelAttribute("user")
