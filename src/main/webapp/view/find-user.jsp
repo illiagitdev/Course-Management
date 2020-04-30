@@ -10,7 +10,7 @@
 <body>
 <c:import url="/view/navig-bar.jsp"/>
 <div align="center">
-    <form id="form" name="form" action="${pageContext.request.contextPath}/user/find">
+    <form id="form" name="form" action="find">
         <h2>Find user by email</h2>
         <label for="email">User email
             <span class="small">Email</span>

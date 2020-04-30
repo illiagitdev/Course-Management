@@ -1,6 +1,8 @@
 package com.courses.management.user;
 
 import com.courses.management.course.Courses;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +13,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping(path = "/user")
 public class UserController {
+    private static final Logger LOG = LogManager.getLogger(UserController.class);
     private Users users;
     private Courses courses;
 
@@ -45,6 +48,7 @@ public class UserController {
         try {
             user = users.getUser(email);
         } catch (UserNotExistException ex) {
+            LOG.error("findUser: ", ex);
             model.addAttribute("error", ex.getMessage());
             return "find-user";
         }

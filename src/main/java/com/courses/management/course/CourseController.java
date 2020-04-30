@@ -2,6 +2,8 @@ package com.courses.management.course;
 
 import com.courses.management.common.exceptions.ErrorMessage;
 import com.sun.tools.javac.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping(path = "/course")
 public class CourseController {
+    private static final Logger LOG = LogManager.getLogger(CourseController.class);
     private Courses courses;
 
     @Autowired
@@ -51,6 +54,7 @@ public class CourseController {
             model.addAttribute("message", course.getTitle());
             return "message";
         } catch (CourseAlreadyExistError e) {
+            LOG.error(String.format("createCourse: course = %s", course.getTitle()));
             model.addAttribute("courseStatuses", CourseStatus.values());
             model.addAttribute("errors", List.of(new ErrorMessage("", e.getMessage())));
             return "create-course";
