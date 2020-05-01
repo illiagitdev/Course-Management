@@ -15,7 +15,7 @@ import javax.validation.Valid;
 public class UserController {
     private static final Logger LOG = LogManager.getLogger(UserController.class);
     private Users users;
-    private Courses courses;
+    private Courses courses;//todo:inject from .xml
 
     public void setUsers(Users users) {
         this.users = users;
@@ -56,6 +56,28 @@ public class UserController {
         return "user-details";
     }
 
+    @GetMapping("/registration")
+    public String showRegistrationForm() {
+        return "registration";
+    }
+
+    @PostMapping(path = "/registration")
+    public String registerUser(@ModelAttribute("userForm") @Valid User user, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "registration";
+        }
+
+        try {
+            users.registerUser(user);
+        } catch (UserAlreadyExistsExeption ex) {
+            LOG.error(String.format("registerUser: error %s", ex.getMessage()), ex);
+            model.addAttribute("message", "An account for this username already exists.");
+            return "registration";
+        }
+
+        return "login";
+    }
+
     @GetMapping(path = "/create")
     public String createUserView(Model model) {
         model.addAttribute("courses", courses.getCourseTitles());
@@ -63,7 +85,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/create")
-    public String createUser(@ModelAttribute("user") @Valid User user, @RequestParam("courseName") String courseName,
+    public String createUser(@ModelAttribute("userForm") @Valid User user, @RequestParam("courseName") String courseName,
                              BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("courses", courses.getCourseTitles());
@@ -83,7 +105,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/updateUser")
-    public String updateUser(@ModelAttribute("user") User user, @RequestParam("courseName") String courseName,
+    public String updateUser(@ModelAttribute("userForm") User user, @RequestParam("courseName") String courseName,
                              @RequestParam("id") Integer id, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("userDetails", users.findUser(id));
@@ -95,7 +117,7 @@ public class UserController {
         return "user-details";
     }
 
-    @ModelAttribute("user")
+    @ModelAttribute("userForm")
     public User getDefaultUser() {
         return new User();
     }

@@ -2,17 +2,22 @@ package com.courses.management.user;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 
 public class Users {
     private static final Logger LOG = LogManager.getLogger(Users.class);
-   private UserRepository userRepository;
+    private UserRepository userRepository;
+    private BCryptPasswordEncoder encoder;
 
     public Users(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    public void setEncoder(BCryptPasswordEncoder encoder) {
+        this.encoder = encoder;
+    }
 
     public List<User> showUsers() {
         LOG.debug("showUsers:");
@@ -25,7 +30,7 @@ public class Users {
                 .orElseThrow(() -> new UserNotExistException(String.format("User with id = %s not found", id)));
     }
 
-        public User getUser(String email) {
+    public User getUser(String email) {
         LOG.debug(String.format("getUser: email = %s", email));
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotExistException("User not found by specified email"));
@@ -35,7 +40,7 @@ public class Users {
         LOG.debug(String.format("getUser: first+last name = %s + %s, email = %s",
                 user.getFirstName(), user.getLastName(), user.getEmail()));
         user.setStatus(UserStatus.NOT_ACTIVE);
-        user.setUserRole(UserRole.NEWCOMER);
+        user.setUserRole(UserRole.ROLE_NEWCOMER);
         userRepository.save(user);
     }
 
@@ -49,5 +54,20 @@ public class Users {
         update.setEmail(user.getEmail());
         update.setCourse(user.getCourse());
         userRepository.flush();
+    }
+
+    public void registerUser(User user) {
+        if (emailExists(user.getEmail())) {
+            throw new UserAlreadyExistsExeption(
+                    String.format("There is an account with that email: %s", user.getEmail()));
+        }
+        user.setUserRole(UserRole.ROLE_NEWCOMER);
+        user.setStatus(UserStatus.ACTIVE);
+        user.setPassword(encoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
+
+    private boolean emailExists(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 }
