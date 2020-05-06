@@ -37,23 +37,23 @@ public class Users {
     }
 
     public void create(User user) {
+        if (emailExists(user.getEmail())) {
+            throw new UserAlreadyExistsExeption(
+                    String.format("There is an account with that email: %s", user.getEmail()));
+        }
         LOG.debug(String.format("getUser: first+last name = %s + %s, email = %s",
                 user.getFirstName(), user.getLastName(), user.getEmail()));
         user.setStatus(UserStatus.NOT_ACTIVE);
         user.setUserRole(UserRole.ROLE_NEWCOMER);
+        user.setPassword(encoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
     public void update(Integer id, User user) {
         LOG.debug(String.format("update(id = %s): first+last name = %s + %s, email = %s",
                 id, user.getFirstName(), user.getLastName(), user.getEmail()));
-        //todo: not updating - exeption
-        User update = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("User not fount"));
-        update.setFirstName(user.getFirstName());
-        update.setLastName(user.getLastName());
-        update.setEmail(user.getEmail());
-        update.setCourse(user.getCourse());
-        userRepository.flush();
+        user.setPassword(encoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 
     public void registerUser(User user) {

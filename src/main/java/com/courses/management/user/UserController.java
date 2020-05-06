@@ -75,7 +75,14 @@ public class UserController {
             return "registration";
         }
 
-        return "login";
+        return "redirect:/login";
+    }
+
+    @GetMapping(path = "/userDetails/{username:.+}")
+    public String showPrincipalDetails(@PathVariable("username") String username, Model model) {
+        System.out.println(username);
+        model.addAttribute("userDetails", users.getUser(username));
+        return "user-details";
     }
 
     @GetMapping(path = "/create")
@@ -91,15 +98,23 @@ public class UserController {
             model.addAttribute("courses", courses.getCourseTitles());
             return "create-user";
         }
-        user.setCourse(courses.getByTitle(courseName ));
-        users.create(user);
+
+        try {
+            user.setCourse(courses.getByTitle(courseName ));
+            users.create(user);
+        } catch (UserAlreadyExistsExeption ex) {
+            LOG.error(String.format("createUser: error %s", ex.getMessage()), ex);
+            model.addAttribute("message", "An account for this username already exists.");
+            return "registration";
+        }
+
         model.addAttribute("userDetails", user);
         return "user-details";
     }
 
     @GetMapping(path = "/updateUser")
     public String updateUserView(@RequestParam("id") Integer id, Model model) {
-        model.addAttribute("userDetails", users.findUser(id));
+        model.addAttribute("userForm", users.findUser(id));
         model.addAttribute("courses", courses.getCourseTitles());
         return "user-update";
     }
@@ -108,10 +123,11 @@ public class UserController {
     public String updateUser(@ModelAttribute("userForm") User user, @RequestParam("courseName") String courseName,
                              @RequestParam("id") Integer id, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("userDetails", users.findUser(id));
+            model.addAttribute("userForm", users.findUser(id));
             model.addAttribute("courses", courses.getCourseTitles());
             return "user-update";
         }
+        user.setCourse(courses.getByTitle(courseName));
         users.update(id, user);
         model.addAttribute("userDetails", users.findUser(id));
         return "user-details";
