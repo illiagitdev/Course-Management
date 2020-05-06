@@ -1,7 +1,6 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
-<security:authentication var="username" property="principal.username" />
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<security:authentication var="username" property="principal.username"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,7 +15,9 @@
         </button>
         <div class="dropdown-content">
             <a href="${pageContext.request.contextPath}/course/showCourses">Show Courses</a>
-            <a href="${pageContext.request.contextPath}/course/createCourses">Create Course</a>
+            <security:authorize access="hasRole('ROLE_ADMIN')">
+                <a href="${pageContext.request.contextPath}/course/createCourses">Create Course</a>
+            </security:authorize>
             <a href="${pageContext.request.contextPath}/course/findCourseView">Find Course</a>
         </div>
     </div>
@@ -25,9 +26,13 @@
             <i class="fa fa-caret-down"></i>
         </button>
         <div class="dropdown-content">
-            <a href="${pageContext.request.contextPath}/user/create">Create User</a>
+            <security:authorize access="hasRole('ROLE_ADMIN')">
+                <a href="${pageContext.request.contextPath}/user/create">Create User</a>
+            </security:authorize>
             <a href="${pageContext.request.contextPath}/user/showUsers">Show users</a>
-            <a href="${pageContext.request.contextPath}/user/findUsers">Find users</a>
+            <security:authorize access="hasRole('ROLE_ADMIN')">
+                <a href="${pageContext.request.contextPath}/user/findUsers">Find users</a>
+            </security:authorize>
         </div>
     </div>
 
@@ -43,6 +48,7 @@
     <div>
 
     </div>
-</div></body>
+</div>
+</body>
 </html>
 

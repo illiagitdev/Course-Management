@@ -1,6 +1,7 @@
 package com.courses.management.user.auth;
 
 import com.courses.management.user.User;
+import com.courses.management.user.UserStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,7 +34,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return this.user.getStatus() != UserStatus.NOT_ACTIVE;
     }
 
     @Override

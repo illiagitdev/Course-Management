@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Courses</title>
@@ -9,31 +9,37 @@
 </head>
 <body>
 <c:import url="/view/navig-bar.jsp"/>
-<c:if test="${not empty courses}">
-<table class="zui-table myform">
-    <thead>
-    <tr>
-        <th>Title</th>
-        <th>Course Status</th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <c:forEach items="${courses}" var="course">
-    <tr>
-        <td>
-            <c:out value="${course.title}"/>
-        </td>
-        <td>
-            <c:out value="${course.courseStatus}"/>
-        </td>
-        <td>
-            <a href="${pageContext.request.contextPath}/course/get?id=${course.id}#" class="button" role="button" tabindex="0">Show details</a>
-        </td>
-    </tr>
-    </c:forEach>
-    </tbody>
-</table>
-</c:if>
+<c:choose>
+    <c:when test="${not empty courses}">
+        <table class="zui-table myform">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Course Status</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach items="${courses}" var="course">
+                <tr>
+                    <td>
+                        <c:out value="${course.title}"/>
+                    </td>
+                    <td>
+                        <c:out value="${course.courseStatus}"/>
+                    </td>
+                    <td>
+                        <a href="${pageContext.request.contextPath}/course/get?id=${course.id}#" class="button"
+                           role="button" tabindex="0">Show details</a>
+                    </td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </c:when>
+    <c:otherwise>
+        <p>There is no courses, please contact admin.</p>
+    </c:otherwise>
+</c:choose>
 </body>
 </html>
