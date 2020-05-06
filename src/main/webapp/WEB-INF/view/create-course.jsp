@@ -1,18 +1,16 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
     <title>Create Course</title>
-    <style>
-        <%@include file="/view/css/style.css"%>
-    </style>
+    <link href="${contextPath}/resources/css/style.css" rel="stylesheet"/>
 </head>
 <body>
-<c:import url="/view/navig-bar.jsp"/>
-
+<c:import url="${contextPath}/WEB-INF/view/navig-bar.jsp"/>
 <div id="stylized" class="myform">
     <form:form id="form" name="form" method="post" action="createCourse" modelAttribute="course">
-        <h1 style="align-content: center">Create project form</h1>
+        <h1 style="align-content: center">Create course form</h1>
 
         <label>Course title
             <span class="small">Course title</span>

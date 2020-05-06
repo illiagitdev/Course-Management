@@ -1,14 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
     <title>User Details</title>
-    <style>
-        <%@include file="/view/css/style.css"%>
-    </style>
+    <link href="${contextPath}/resources/css/style.css" rel="stylesheet"/>
 </head>
 <body>
-<c:import url="/view/navig-bar.jsp"/>
+<c:import url="${contextPath}/webapp/WEB-INF/view/navig-bar.jsp"/>
 <c:if test="${not empty userDetails}">
     <table class="zui-table myform">
         <h2>User Details</h2>
@@ -37,7 +36,7 @@
                     ${userDetails.status}
             </td>
             <td>
-                <a href="${pageContext.request.contextPath}/course/get?id=${userDetails.course.id}" class="button"
+                <a href="${contextPath}/course/get?id=${userDetails.course.id}" class="button"
                    role="button" tabindex="0">${userDetails.course.title}</a>
             </td>
             <td>
@@ -45,7 +44,7 @@
                     <c:choose>
                         <c:when test="${not empty userDetails.solutions}">
                             <c:forEach items="${userDetails.solutions}" var="solution">
-                                <li><a href="${pageContext.request.contextPath}/solution/get?id=${solution.id}" class="button"
+                                <li><a href="${contextPath}/solution/get?id=${solution.id}" class="button"
                                        role="button"
                                        tabindex="0">${solution.homework.title}</a><br>
                                 </li>
@@ -60,7 +59,7 @@
         </tr>
         </tbody>
     </table>
-    <a href="${pageContext.request.contextPath}/user/updateUser?id=${userDetails.id}#" class="button"
+    <a href="${contextPath}/user/updateUser?id=${userDetails.id}#" class="button"
        role="button" tabindex="0">Update</a>
 </c:if>
 </body>

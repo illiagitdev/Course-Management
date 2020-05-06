@@ -3,11 +3,13 @@ package com.courses.management.homework;
 import com.courses.management.common.BaseEntity;
 import com.courses.management.course.Course;
 import com.courses.management.solution.Solutions;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Component
 @Table(name = "home_work")
 public class Homework extends BaseEntity {
     private String title;

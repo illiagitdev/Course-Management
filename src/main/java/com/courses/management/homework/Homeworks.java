@@ -5,22 +5,28 @@ import com.courses.management.course.CourseRepository;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
 
+@Service
 public class Homeworks {
     private static final Logger LOG = LogManager.getLogger(Homeworks.class);
     private HomeworkRepository homeworkRepository;
     private CourseRepository courseRepository;
     private String folderPath;
 
+    @Autowired
     public Homeworks(HomeworkRepository homeworkRepository, CourseRepository courseRepository) {
         this.homeworkRepository = homeworkRepository;
         this.courseRepository = courseRepository;
     }
 
+    @Value("folder_path")
     public void setFolderPath(String folderPath) {
         this.folderPath = folderPath;
     }

@@ -3,6 +3,7 @@ package com.courses.management.user;
 import com.courses.management.common.BaseEntity;
 import com.courses.management.course.Course;
 import com.courses.management.solution.Solutions;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Objects;
 
+@Component
 @Entity
 @Table(name = "users")
 public class User extends BaseEntity {

@@ -4,7 +4,6 @@ import com.courses.management.common.exceptions.ErrorMessage;
 import com.courses.management.user.User;
 import com.courses.management.user.UserRole;
 import com.courses.management.user.Users;
-import com.sun.tools.javac.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Objects;
 
 @Controller

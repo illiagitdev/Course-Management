@@ -1,14 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
     <title>User</title>
-    <style>
-        <%@include file="/view/css/style.css"%>
-    </style>
+    <link href="${contextPath}/resources/css/style.css" rel="stylesheet"/>
 </head>
 <body>
-<c:import url="/view/navig-bar.jsp"/>
+<c:import url="${contextPath}/WEB-INF/view/navig-bar.jsp"/>
 <div id="stylized" class="myform">
     <h1 style="alignment: center">Show users</h1>
     <c:if test="${not empty users}">
@@ -31,11 +30,11 @@
                             ${user.email}
                     </td>
                     <td>
-                        <a href="${pageContext.request.contextPath}/course/get?id=${user.course.id}" class="button"
+                        <a href="${contextPath}/course/get?id=${user.course.id}" class="button"
                            role="button" tabindex="0">${user.course.title}</a>
                     </td>
                     <td>
-                        <a href="${pageContext.request.contextPath}/user/get?id=${user.id}#" class="button"
+                        <a href="${contextPath}/user/get?id=${user.id}#" class="button"
                            role="button" tabindex="0">Details</a>
                     </td>
                 </tr>
