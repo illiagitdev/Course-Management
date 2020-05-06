@@ -11,7 +11,7 @@
 <c:import url="/view/navig-bar.jsp"/>
 <div align="center">
     <h3>${pageContext.request.contextPath}/homework/getFile?homeworkId=${homeworkId}"</h3>
-    <iframe src="${pageContext.request.contextPath}/homework/getFile?homeworkId=${homeworkId}" width="500" height="600" allowfullscreen webkitallowfullscreen></iframe>
+    <iframe src="${pageContext.request.contextPath}/homework/getFile?homeworkId=${homeworkId}" width="1000" height="600" allowfullscreen webkitallowfullscreen></iframe>
 </div>
 </body>
 </html>
