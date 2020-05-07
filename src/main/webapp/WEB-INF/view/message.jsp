@@ -8,6 +8,6 @@
 </head>
 <body>
 <c:import url="${contextPath}/WEB-INF/view/navig-bar.jsp"/>
-<h2 align="center">Course with title ${message} created!</h2>
+<h2 align="center">${message}</h2>
 </body>
 </html>

@@ -1,15 +1,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
     <title>Create User</title>
-    <style>
-        <%@include file="/view/css/style.css"%>
-    </style>
+    <link href="${contextPath}/resources/css/style.css" rel="stylesheet"/>
 </head>
 <body>
-<c:import url="/view/navig-bar.jsp"/>
+<c:import url="${contextPath}/WEB-INF/view/navig-bar.jsp"/>
 
 <div id="stylized" class="myform">
     <form:form id="form" modelAttribute="userForm" name="form" method="post" action="create">
@@ -47,6 +46,28 @@
                 <form:errors path="email" cssClass="error"/>
             </div>
         </spring:bind>
+
+            <spring:bind path="userRole">
+                <label for="userRole">Set user role
+                    <span class="small" >User role</span>
+                </label>
+                <select name="userRole" id="userRole" title="userRole">
+                    <c:forEach items="${userRoles}" var="userRole">
+                        <option>${userRole}</option>
+                    </c:forEach>
+                </select>
+            </spring:bind>
+
+            <spring:bind path="status">
+                <label for="status">Set user status
+                    <span class="small" >User status</span>
+                </label>
+                <select name="status" id="status" title="status">
+                    <c:forEach items="${statuses}" var="status">
+                        <option>${status}</option>
+                    </c:forEach>
+                </select>
+            </spring:bind>
 
         <spring:bind path="password">
             <div class="form-group ${status.error ? 'has-error' : ''}">

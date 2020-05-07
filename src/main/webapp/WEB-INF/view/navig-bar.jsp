@@ -18,8 +18,8 @@
             <a href="${contextPath}/course/showCourses">Show Courses</a>
             <security:authorize access="hasRole('ROLE_ADMIN')">
                 <a href="${contextPath}/course/createCourses">Create Course</a>
+                <a href="${contextPath}/course/findCourseView">Find Course</a>
             </security:authorize>
-            <a href="${contextPath}/course/findCourseView">Find Course</a>
         </div>
     </div>
     <div class="dropdown">

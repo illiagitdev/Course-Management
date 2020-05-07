@@ -61,6 +61,7 @@ public class CourseController {
         return "create-course";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(path = "/createCourse")
     public String createCourse(@ModelAttribute("course") @Valid Course course, BindingResult result, Model model) {
         System.out.println("Hello create course start");
@@ -71,7 +72,7 @@ public class CourseController {
 
         try {
             courses.createCourse(course);
-            model.addAttribute("message", course.getTitle());
+            model.addAttribute("message", String.format("Course with title %s created!", course.getTitle()));
             return "message";
         } catch (CourseAlreadyExistError e) {
             LOG.error(String.format("createCourse: course = %s", course.getTitle()));
@@ -81,11 +82,13 @@ public class CourseController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(path = "/findCourseView")
     public String findCourseView(){
         return "find-course";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(path = "/findCourse")
     public String findCourse(@RequestParam("courseName") String courseName, Model model){
         Course course = courses.getByTitle(courseName);

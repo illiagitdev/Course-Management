@@ -28,7 +28,7 @@
                         <c:out value="${course.courseStatus}"/>
                     </td>
                     <td>
-                        <a href="${contextPath.}/course/get?id=${course.id}#" class="button"
+                        <a href="${contextPath}/course/get?id=${course.id}#" class="button"
                            role="button" tabindex="0">Show details</a>
                     </td>
                 </tr>
