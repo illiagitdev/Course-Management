@@ -1,13 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<security:authentication var="username" property="principal.username"/>
 <html>
 <head>
     <title>User Details</title>
     <link href="${contextPath}/resources/css/style.css" rel="stylesheet"/>
 </head>
 <body>
-<c:import url="${contextPath}/webapp/WEB-INF/view/navig-bar.jsp"/>
+<c:import url="${contextPath}/WEB-INF/view/navig-bar.jsp"/>
 <c:if test="${not empty userDetails}">
     <table class="zui-table myform">
         <h2>User Details</h2>
@@ -15,8 +17,10 @@
         <tr>
             <th>Full name</th>
             <th>Email</th>
-            <th>User role</th>
-            <th>User status</th>
+            <security:authorize access="hasRole('ROLE_ADMIN')">
+                <th>User role</th>
+                <th>User status</th>
+            </security:authorize>
             <th>Course</th>
             <th>Solutions</th>
         </tr>
@@ -29,12 +33,14 @@
             <td>
                     ${userDetails.email}
             </td>
-            <td>
-                    ${userDetails.userRole}
-            </td>
-            <td>
-                    ${userDetails.status}
-            </td>
+            <security:authorize access="hasRole('ROLE_ADMIN')">
+                <td>
+                        ${userDetails.userRole}
+                </td>
+                <td>
+                        ${userDetails.status}
+                </td>
+            </security:authorize>
             <td>
                 <a href="${contextPath}/course/get?id=${userDetails.course.id}" class="button"
                    role="button" tabindex="0">${userDetails.course.title}</a>
@@ -61,6 +67,10 @@
     </table>
     <a href="${contextPath}/user/updateUser?id=${userDetails.id}#" class="button"
        role="button" tabindex="0">Update</a>
+    <security:authorize access="hasRole('ROLE_ADMIN')">
+        <a href="${contextPath}/user/delete?id=${userDetails.id}#" class="button"
+           role="button" tabindex="0">Delete</a>
+    </security:authorize>
 </c:if>
 </body>
 </html>

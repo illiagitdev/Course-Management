@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class Users {
@@ -47,16 +48,24 @@ public class Users {
         }
         LOG.debug(String.format("getUser: first+last name = %s + %s, email = %s",
                 user.getFirstName(), user.getLastName(), user.getEmail()));
-        user.setStatus(UserStatus.NOT_ACTIVE);
-        user.setUserRole(UserRole.ROLE_NEWCOMER);
         user.setPassword(encoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
-    public void update(Integer id, User user) {
-        LOG.debug(String.format("update(id = %s): first+last name = %s + %s, email = %s",
-                id, user.getFirstName(), user.getLastName(), user.getEmail()));
+    public void update(Integer id, User userForm) {
+        LOG.debug(String.format("update(id = %s): first+last name = %s + %s, email = %s, role=%s, status=%s",
+                userForm.getId(), userForm.getFirstName(), userForm.getLastName(), userForm.getEmail(),
+                userForm.getUserRole(), userForm.getStatus()));
+        User user = findUser(id);
+        user.setFirstName(userForm.getFirstName());
+        user.setLastName(userForm.getLastName());
+        user.setEmail(userForm.getEmail());
+        user.setCourse(userForm.getCourse());
         user.setPassword(encoder.encode(user.getPassword()));
+        if(Objects.nonNull(userForm.getStatus()) && Objects.nonNull(userForm.getUserRole())) {
+            user.setStatus(userForm.getStatus());
+            user.setUserRole(userForm.getUserRole());
+        }
         userRepository.save(user);
     }
 
@@ -69,6 +78,11 @@ public class Users {
         user.setStatus(UserStatus.ACTIVE);
         user.setPassword(encoder.encode(user.getPassword()));
         userRepository.save(user);
+    }
+
+    public void delete(Integer id) {
+        LOG.debug(String.format("delete: %s", id));
+        userRepository.deleteById(id);
     }
 
     private boolean emailExists(String email) {
