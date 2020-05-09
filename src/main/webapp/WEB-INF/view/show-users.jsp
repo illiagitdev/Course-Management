@@ -30,8 +30,10 @@
                             ${user.email}
                     </td>
                     <td>
+                        <c:if test="${not empty user.course}">
                         <a href="${contextPath}/course/get?id=${user.course.id}" class="button"
                            role="button" tabindex="0">${user.course.title}</a>
+                        </c:if>
                     </td>
                     <td>
                         <a href="${contextPath}/user/get?id=${user.id}#" class="button"

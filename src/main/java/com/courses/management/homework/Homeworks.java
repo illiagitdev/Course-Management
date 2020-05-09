@@ -26,7 +26,7 @@ public class Homeworks {
         this.courseRepository = courseRepository;
     }
 
-    @Value("folder_path")
+    @Value("${folder_path}")
     public void setFolderPath(String folderPath) {
         this.folderPath = folderPath;
     }
