@@ -21,7 +21,9 @@
                 <th>User role</th>
                 <th>User status</th>
             </security:authorize>
-            <th>Course</th>
+            <c:if test="${not empty userDetails.course}">
+                <th>Course</th>
+            </c:if>
             <th>Solutions</th>
         </tr>
         </thead>
@@ -41,10 +43,12 @@
                         ${userDetails.status}
                 </td>
             </security:authorize>
-            <td>
-                <a href="${contextPath}/course/get?id=${userDetails.course.id}" class="button"
-                   role="button" tabindex="0">${userDetails.course.title}</a>
-            </td>
+            <c:if test="${not empty userDetails.course}">
+                <td>
+                    <a href="${contextPath}/course/get?id=${userDetails.course.id}" class="button"
+                       role="button" tabindex="0">${userDetails.course.title}</a>
+                </td>
+            </c:if>
             <td>
                 <ul>
                     <c:choose>

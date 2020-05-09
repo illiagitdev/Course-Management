@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class Users {
+public class Users implements UserService{
     private static final Logger LOG = LogManager.getLogger(Users.class);
     private UserRepository userRepository;
     private BCryptPasswordEncoder encoder;
@@ -24,23 +24,27 @@ public class Users {
         this.encoder = encoder;
     }
 
+    @Override
     public List<User> showUsers() {
         LOG.debug("showUsers:");
         return userRepository.findAll();
     }
 
+    @Override
     public User findUser(Integer id) {
         LOG.debug(String.format("findUser: id = %s", id));
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotExistException(String.format("User with id = %s not found", id)));
     }
 
+    @Override
     public User getUser(String email) {
         LOG.debug(String.format("getUser: email = %s", email));
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotExistException("User not found by specified email"));
     }
 
+    @Override
     public void create(User user) {
         if (emailExists(user.getEmail())) {
             throw new UserAlreadyExistsExeption(
@@ -52,6 +56,7 @@ public class Users {
         userRepository.save(user);
     }
 
+    @Override
     public void update(Integer id, User userForm) {
         LOG.debug(String.format("update(id = %s): first+last name = %s + %s, email = %s, role=%s, status=%s",
                 userForm.getId(), userForm.getFirstName(), userForm.getLastName(), userForm.getEmail(),
@@ -69,6 +74,7 @@ public class Users {
         userRepository.save(user);
     }
 
+    @Override
     public void registerUser(User user) {
         if (emailExists(user.getEmail())) {
             throw new UserAlreadyExistsExeption(
@@ -80,6 +86,7 @@ public class Users {
         userRepository.save(user);
     }
 
+    @Override
     public void delete(Integer id) {
         LOG.debug(String.format("delete: %s", id));
         userRepository.deleteById(id);

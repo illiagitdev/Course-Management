@@ -1,6 +1,6 @@
 package com.courses.management.user;
 
-import com.courses.management.course.Courses;
+import com.courses.management.course.CourseService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +20,16 @@ import java.util.List;
 @RequestMapping(path = "/user")
 public class UserController {
     private static final Logger LOG = LogManager.getLogger(UserController.class);
-    private Users users;
-    private Courses courses;
+    private UserService users;
+    private CourseService courses;
 
     @Autowired
-    public void setUsers(Users users) {
+    public void setUsers(UserService users) {
         this.users = users;
     }
 
     @Autowired
-    public void setCourses(Courses courses) {
+    public void setCourses(CourseService courses) {
         this.courses = courses;
     }
 

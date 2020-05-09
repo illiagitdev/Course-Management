@@ -3,7 +3,7 @@ package com.courses.management.course;
 import com.courses.management.common.exceptions.ErrorMessage;
 import com.courses.management.user.User;
 import com.courses.management.user.UserRole;
-import com.courses.management.user.Users;
+import com.courses.management.user.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +24,11 @@ import java.util.Objects;
 @RequestMapping(path = "/course")
 public class CourseController {
     private static final Logger LOG = LogManager.getLogger(CourseController.class);
-    private Courses courses;
-    private Users users;
+    private CourseService courses;
+    private UserService users;
 
     @Autowired
-    public void setCourses(Courses courses, Users users){
+    public void setCourses(CourseService courses, UserService users){
         this.courses = courses;
         this.users = users;
     }
@@ -55,7 +55,7 @@ public class CourseController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping(path = "/createCourses")
+    @GetMapping(path = "/createCourse")
     public String getCreateCourseView (Model model) {
         model.addAttribute("courseStatuses", CourseStatus.values());
         return "create-course";

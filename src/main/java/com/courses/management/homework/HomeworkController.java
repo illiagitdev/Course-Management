@@ -26,10 +26,10 @@ import java.util.List;
 @RequestMapping(value = "/homework")
 public class HomeworkController {
     private static final Logger LOG = LogManager.getLogger(HomeworkController.class);
-    private Homeworks homeworks;
+    private HomeworkService homeworks;
 
     @Autowired
-    public void setHomeworks(Homeworks homeworks) {
+    public void setHomeworks(HomeworkService homeworks) {
         this.homeworks = homeworks;
     }
 
@@ -40,7 +40,8 @@ public class HomeworkController {
     }
 
     @PostMapping(path = "/upload")
-    public ModelAndView uploadFile(@RequestParam("course_id") Integer courseId, HttpServletRequest request, ModelMap model) {
+    public ModelAndView uploadFile(@RequestParam("course_id") Integer courseId, HttpServletRequest request,
+                                   ModelMap model) {
         if (ServletFileUpload.isMultipartContent(request)) {
             try {
                 List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
