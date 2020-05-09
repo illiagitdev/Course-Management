@@ -18,29 +18,29 @@
         <spring:bind path="firstName">
             <div class="form-group ${status.error ? 'has-error' : ''}">
                 <form:input type="text" path="firstName" class="form-control" placeholder="first name"
-                            autofocus="true"></form:input>
-                <form:errors path="firstName"></form:errors>
+                            autofocus="true"/>
+                <form:errors path="firstName"/>
             </div>
         </spring:bind>
         <spring:bind path="lastName">
             <div class="form-group ${status.error ? 'has-error' : ''}">
                 <form:input type="text" path="lastName" class="form-control" placeholder="last name"
-                            autofocus="true"></form:input>
-                <form:errors path="lastName"></form:errors>
+                            autofocus="true"/>
+                <form:errors path="lastName"/>
             </div>
         </spring:bind>
         <span>${message}</span>
         <spring:bind path="email">
             <div class="form-group ${status.error ? 'has-error' : ''}">
                 <form:input type="text" path="email" class="form-control" placeholder="Username(use email as user name)"
-                            autofocus="true"></form:input>
-                <form:errors path="email"></form:errors>
+                            autofocus="true"/>
+                <form:errors path="email"/>
             </div>
         </spring:bind>
         <spring:bind path="password">
             <div class="form-group ${status.error ? 'has-error' : ''}">
-                <form:input type="password" path="password" class="form-control" placeholder="Password"></form:input>
-                <form:errors path="password"></form:errors>
+                <form:input type="password" path="password" class="form-control" placeholder="Password"/>
+                <form:errors path="password"/>
             </div>
         </spring:bind>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
