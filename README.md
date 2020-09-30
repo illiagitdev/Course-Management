@@ -21,8 +21,6 @@
 2. Spring (Core, Data, Security, Spring JDBC)
 3. Hibernate
 4. PostgreSQL/H2
-5. Flyway/Liqubaise
-6. HTML/JavaScript/JSP|Thymeleaf
-7. Junit (Unit/Integretion)
-8. Docker
-9. Gradle
+5. HTML/JavaScript/JSP|Thymeleaf
+6. Junit (Unit/Integretion)
+7.  Gradle
